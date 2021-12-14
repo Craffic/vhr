@@ -19,5 +19,13 @@ public class SystemController {
         return menuService.getMenusByHrId();
     }
 
+    @GetMapping("/system/log")
+    public String sysLog(){
+        return "系统日志";
+    }
 
+    @GetMapping("/system/cfg")
+    public String sysConfig(){
+        return "系统配置";
+    }
 }

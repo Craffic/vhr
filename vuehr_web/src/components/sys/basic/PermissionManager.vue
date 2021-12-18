@@ -13,7 +13,8 @@
             <el-card class="box-card">
               <div slot="header" class="clearfix">
                 <span>可访问资源</span>
-                <el-button style="float: right; padding: 3px 0; color: red" icon="el-icon-delete"></el-button>
+                <!--删除权限-->
+                <el-button style="float: right; padding: 3px 0; color: red" icon="el-icon-delete" @click="deleteRole(role)"></el-button>
               </div>
               <!--展示菜单项-->
               <div>
@@ -32,7 +33,7 @@
 </template>
 
 <script>
-import {getRequest, postRequest, putRequest} from "@/utils/api";
+import {deleteRequest, getRequest, postRequest, putRequest} from "@/utils/api";
     import {initMenu} from "@/utils/menu";
 
     export default {
@@ -125,6 +126,24 @@ import {getRequest, postRequest, putRequest} from "@/utils/api";
                 } else {
                   this.$message.error("角色英文名或中文名不能为空！");
                 }
+            },
+            /*删除角色*/
+            deleteRole(role){
+              this.$confirm('此操作将永久删除【' + role.nameZh + '】角色， 是否继续?', '提示', {
+                confirmButtonText: '确定',
+                cancelButtonText: '取消',
+                type: 'warning'
+              }).then(() => {
+                deleteRequest('/system/basic/permiss/role/' + role.id).then(resp => {
+                  this.initRoles();
+                  this.activeName = -1;
+                })
+              }).catch(() => {
+                this.$message({
+                  type: 'info',
+                  message: '已取消删除'
+                });
+              });
             }
 
         }

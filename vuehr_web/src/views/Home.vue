@@ -37,7 +37,7 @@
         <div class="homeWelcome" v-if="this.$router.currentRoute.path == '/home'">
           微人事管理系统
         </div>
-        <router-view/>
+        <router-view class="homeRouterView"/>
       </el-main>
     </el-container>
   </el-container>
@@ -121,5 +121,8 @@ export default {
 .el-dropdown-link {
   display: flex;
   align-items: center;
+}
+.homeRouterView {
+  margin-top: 15px;
 }
 </style>

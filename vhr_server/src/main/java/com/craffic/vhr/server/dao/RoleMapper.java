@@ -11,4 +11,9 @@ public interface RoleMapper {
 
     List<Role> getHrRolesById(@Param("hrId") Integer hrId);
 
+    List<Role> getAllRoles();
+
+    int insert(Role record);
+
+    int deleteByPrimaryKey(Integer id);
 }

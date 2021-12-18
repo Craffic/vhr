@@ -11,4 +11,19 @@
     <select id="getHrRolesById" parameterType="java.lang.Integer" resultType="com.craffic.vhr.server.domain.Role">
         SELECT r.* FROM hr h LEFT JOIN hr_role hr on h.id = hr.hrid LEFT JOIN role r ON r.id = hr.rid where h.id = #{hrId,jdbcType=INTEGER}
     </select>
+
+    <insert id="insert" parameterType="com.craffic.vhr.server.domain.Role" >
+        insert into role (id, name, nameZh)
+        values (#{id,jdbcType=INTEGER}, #{name,jdbcType=VARCHAR}, #{nameZh,jdbcType=VARCHAR}
+               )
+    </insert>
+
+    <select id="getAllRoles" resultMap="BaseResultMap">
+        select * from role;
+    </select>
+
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+        delete from role
+        where id = #{id,jdbcType=INTEGER}
+    </delete>
 </mapper>

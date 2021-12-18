@@ -1,12 +1,14 @@
 package com.craffic.vhr.server.service;
 
 import com.craffic.vhr.server.dao.MenuMapper;
+import com.craffic.vhr.server.dao.MenuRoleMapper;
 import com.craffic.vhr.server.domain.Hr;
 import com.craffic.vhr.server.domain.Menu;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -14,6 +16,20 @@ import java.util.List;
 public class MenuService {
     @Autowired
     MenuMapper menuMapper;
+    @Autowired
+    MenuRoleMapper menuRoleMapper;
+
+    public List<Menu> getAllMenusWithRole() {
+        return menuMapper.getAllMenusWithRole();
+    }
+
+    public List<Menu> getAllMenus() {
+        return menuMapper.getAllMenus();
+    }
+
+    public List<Integer> getMidsByRid(Integer rid) {
+        return menuMapper.getMidsByRid(rid);
+    }
 
     /**
      * 根据hrid查询全部能访问的菜单数据
@@ -22,5 +38,15 @@ public class MenuService {
     public List<Menu> getMenusByHrId() {
         Hr curHr = (Hr) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         return menuMapper.getMenusByHrId((curHr.getId()));
+    }
+
+    @Transactional
+    public boolean updateMenuRole(Integer rid, Integer[] mids) {
+        menuRoleMapper.deleteByRid(rid);
+        if (mids == null || mids.length == 0) {
+            return true;
+        }
+        Integer result = menuRoleMapper.insertRecord(rid, mids);
+        return result==mids.length;
     }
 }

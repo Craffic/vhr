@@ -69,3 +69,32 @@ export const getRequest = (url, params) => {
         data: params
     })
 }
+
+/**
+ * 封装post请求
+ */
+export const postRequest = (url, params) => {
+    return axios({
+        method: 'post',
+        url: `${base}${url}`,
+        data: params
+    })
+}
+
+/*封装删除请求*/
+export const deleteRequest = (url, params) => {
+    return axios({
+        method: 'delete',
+        url: `${base}${url}`,
+        params: params
+    })
+}
+
+/*封装put请求*/
+export const putRequest = (url, params) => {
+    return axios({
+        method: 'put',
+        url: `${base}${url}`,
+        data: params
+    })
+}

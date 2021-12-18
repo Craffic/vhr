@@ -4,8 +4,8 @@
         <el-input size="small" placeholder="请输入角色英文名" v-model="role.name">
           <template slot="prepend">ROLE_</template>
         </el-input>
-        <el-input size="small" placeholder="请输入角色中文名" v-model="role.nameZh"></el-input>
-        <el-button size="small" icon="el-icon-plus" type="primary">添加角色</el-button>
+        <el-input size="small" placeholder="请输入角色中文名" v-model="role.nameZh" @keydown.en.enter.native="addRoles"></el-input>
+        <el-button size="small" icon="el-icon-plus" type="primary" @click="addRoles">添加角色</el-button>
       </div>
       <div class="permissManaMain">
         <el-collapse v-model="activeName" accordion @change="change">
@@ -32,7 +32,7 @@
 </template>
 
 <script>
-import {getRequest, putRequest} from "@/utils/api";
+import {getRequest, postRequest, putRequest} from "@/utils/api";
     import {initMenu} from "@/utils/menu";
 
     export default {
@@ -95,9 +95,8 @@ import {getRequest, putRequest} from "@/utils/api";
             },
             /*确认修改*/
             comfirmUpdate(rid, index){
-              var tree = this.$refs.tree[index];
-              var selectedKeys = tree.getCheckedKeys(true);// true表示只返回叶子节点
-              console.log(selectedKeys);
+              let tree = this.$refs.tree[index];
+              let selectedKeys = tree.getCheckedKeys(true);// true表示只返回叶子节点
               var url = '/system/basic/permiss/update/menu_role?rid=' +rid;
               selectedKeys.forEach(key => {
                 url += '&mids=' + key;
@@ -105,7 +104,6 @@ import {getRequest, putRequest} from "@/utils/api";
               console.log(url);
               putRequest(url).then(resp =>{
                 if (resp) {
-                  this.initRoles();
                   this.activeName = -1;
                 }
               })
@@ -113,7 +111,22 @@ import {getRequest, putRequest} from "@/utils/api";
             /*取消修改*/
             cancelUpdate(){
               this.activeName = -1;
+            },
+            /*添加角色*/
+            addRoles(){
+                if (this.role.name && this.role.nameZh){
+                  postRequest('/system/basic/permiss/role', this.role).then(resp => {
+                    if (resp) {
+                      this.role.name = '';
+                      this.role.nameZh = '';
+                      this.initRoles();
+                    }
+                  })
+                } else {
+                  this.$message.error("角色英文名或中文名不能为空！");
+                }
             }
+
         }
     }
 </script>

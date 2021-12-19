@@ -22,7 +22,7 @@
             <div>电话号码：{{hr.telephone}}</div>
             <div>地址：{{hr.address}}</div>
             <div>用户状态：
-              <el-switch
+              <el-switch @change="enabledHr(hr)"
                   v-model="hr.enabled"
                   active-text="启用"
                   inactive-text="禁用"
@@ -43,7 +43,7 @@
 </template>
 
 <script>
-import {getRequest} from "@/utils/api";
+import {getRequest, putRequest} from "@/utils/api";
 
 export default {
   name: "SysHr",
@@ -68,6 +68,15 @@ export default {
 
         if (resp) {
           this.hrs = resp;
+        }
+      })
+    },
+    /*更新用户状态*/
+    enabledHr(hr){
+      delete hr.roles;
+      putRequest("/system/hr/update", hr).then(resp => {
+        if (resp) {
+          this.initHrs();
         }
       })
     }

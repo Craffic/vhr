@@ -11,4 +11,6 @@ public interface HrMapper {
     Hr loadUserByUsername(String userName);
 
     List<Hr> getAllHrs(@Param("hrid") Integer hrid, @Param("keywords") String keywords);
+
+    Integer updateByPrimaryKeySelective(Hr hr);
 }

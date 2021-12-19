@@ -22,7 +22,7 @@ export default {
   name: "SysBasic",
   data(){
     return{
-      activeName : 'PermissionManager'
+      activeName : 'DepManager'
     }
   },
   components:{

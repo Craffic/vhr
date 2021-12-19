@@ -14,4 +14,6 @@ public interface DepartmentMapper {
     List<Department> getAllDepartmentsByParentId(@Param("parentId") Integer parentId);
 
     void addDept(Department department);
+
+    void deleteDepById(Department dep);
 }

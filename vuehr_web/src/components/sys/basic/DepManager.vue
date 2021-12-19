@@ -40,7 +40,7 @@
 </template>
 
 <script>
-import {getRequest, postRequest} from "@/utils/api";
+import {deleteRequest, getRequest, postRequest} from "@/utils/api";
 
     export default {
         name: "DepManager",
@@ -125,8 +125,43 @@ import {getRequest, postRequest} from "@/utils/api";
           },
           /*删除部门*/
           deleteDept(data){
-            console.log(data);
+            if (data.parent) {
+              this.$message.error("父部门删除失败！");
+            } else {
+              this.$confirm('此操作将永久删除【' + data.name + '】部门, 是否继续?', '提示', {
+                confirmButtonText: '确定',
+                cancelButtonText: '取消',
+                type: 'warning'
+              }).then(() => {
+                deleteRequest('/system/basic/department/del_dept/' + data.id).then(resp => {
+                  if (resp) {
+                    // 动态移除被删除的组
+                    this.removeDeptFromList(null, this.depts, data.id);
+                  }
+                })
+              }).catch(() => {
+                this.$message({
+                  type: 'info',
+                  message: '已取消删除'
+                });
+              });
+            }
+          },
+          /*动态删除指定部门*/
+        removeDeptFromList(p,deps, id) {
+          for(let i=0;i<deps.length;i++){
+            let d = deps[i];
+            if (d.id == id) {
+              deps.splice(i, 1);
+              if (deps.length == 0) {
+                p.parent = false;
+              }
+              return;
+            }else{
+              this.removeDeptFromList(d,d.children, id);
+            }
           }
+        }
         }
     }
 </script>

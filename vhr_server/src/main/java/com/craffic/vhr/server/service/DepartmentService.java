@@ -22,4 +22,8 @@ public class DepartmentService {
         departmentMapper.addDept(department);
         return null;
     }
+
+    public void deleteDepById(Department dep) {
+        departmentMapper.deleteDepById(dep);
+    }
 }

@@ -1,11 +1,10 @@
 package com.craffic.vhr.server.controller.system.basic;
 
+import com.craffic.vhr.server.common.RespBean;
 import com.craffic.vhr.server.domain.Department;
 import com.craffic.vhr.server.service.DepartmentService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -24,4 +23,15 @@ public class DepartmentController {
         return departmentService.queryAllDepartments();
     }
 
+    /**
+     * 添加部门
+     */
+    @PostMapping("/add_dept")
+    public RespBean addDepartment(@RequestBody Department department){
+        departmentService.addDept(department);
+        if (department.getResult() == 1) {
+            return RespBean.ok("添加成功！", department);
+        }
+        return RespBean.error("添加部门失败！");
+    }
 }

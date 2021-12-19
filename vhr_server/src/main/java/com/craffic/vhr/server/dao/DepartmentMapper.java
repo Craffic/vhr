@@ -12,4 +12,6 @@ public interface DepartmentMapper {
      * 用sql递归的方式来查询出所有部门节点的数据
      */
     List<Department> getAllDepartmentsByParentId(@Param("parentId") Integer parentId);
+
+    void addDept(Department department);
 }

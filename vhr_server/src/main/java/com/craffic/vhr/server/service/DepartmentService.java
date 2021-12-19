@@ -16,4 +16,10 @@ public class DepartmentService {
     public List<Department> queryAllDepartments() {
         return departmentMapper.getAllDepartmentsByParentId(-1);
     }
+
+    public Department addDept(Department department) {
+        department.setEnabled(true);
+        departmentMapper.addDept(department);
+        return null;
+    }
 }

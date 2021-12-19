@@ -4,6 +4,7 @@ import com.craffic.vhr.server.dao.HrMapper;
 import com.craffic.vhr.server.dao.RoleMapper;
 import com.craffic.vhr.server.domain.Hr;
 import com.craffic.vhr.server.domain.Role;
+import com.craffic.vhr.server.util.HrUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -30,5 +31,12 @@ public class HrService implements UserDetailsService {
         List<Role> roles = roleMapper.getHrRolesById(hr.getId());
         hr.setRoles(roles);
         return hr;
+    }
+
+    /**
+     * 获取所有Hr记录
+     */
+    public List<Hr> getAllHrs(String keywords) {
+        return hrMapper.getAllHrs(HrUtils.getCurrentHr().getId(),keywords);
     }
 }

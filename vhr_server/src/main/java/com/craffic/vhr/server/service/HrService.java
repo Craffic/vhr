@@ -43,7 +43,7 @@ public class HrService implements UserDetailsService {
      * 获取所有Hr记录
      */
     public List<Hr> getAllHrs(String keywords) {
-        return hrMapper.getAllHrs(HrUtils.getCurrentHr().getId(),keywords);
+        return hrMapper.getAllHrs(HrUtils.getCurrentHr().getId(), keywords);
     }
 
     public Integer updateHr(Hr hr) {

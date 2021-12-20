@@ -2,7 +2,8 @@
   <div>
 <!--    搜索栏-->
     <div style="margin-top: 10px; display: flex;justify-content: center">
-      <el-input v-model="keywords" size="small" placeholder="通过用户名搜索..." prefix-icon="el-icon-search" style="width: 400px;margin-right: 10px"></el-input>
+      <el-input v-model="keywords" size="small" placeholder="通过用户名搜索..." prefix-icon="el-icon-search" style="width: 400px;margin-right: 10px"
+                @click="search" @keydown.enter.native="search"></el-input>
       <el-button icon="el-icon-search" @click="search" size="small" type="primary">搜索</el-button>
     </div>
 <!--    hr信息卡片-->
@@ -67,6 +68,7 @@ export default {
   name: "SysHr",
   data(){
     return {
+      /*搜索关键字*/
       keywords: '',
       /*查询返回所有的hr数组*/
       hrs: [],
@@ -82,12 +84,11 @@ export default {
   methods: {
     /*搜索*/
     search(){
-
+      this.initHrs();
     },
     /*查询所有的hr用户*/
     initHrs(){
-      getRequest('/system/hr/query/all_hr').then(resp => {
-
+      getRequest('/system/hr/query/all_hr?keywords=' + this.keywords).then(resp => {
         if (resp) {
           this.hrs = resp;
         }

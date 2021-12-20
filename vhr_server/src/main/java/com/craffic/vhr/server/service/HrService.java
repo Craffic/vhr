@@ -58,10 +58,19 @@ public class HrService implements UserDetailsService {
         return roleService.getAllRoles();
     }
 
+    /**
+     * 更新hr的roles
+     */
     @Transactional
     public boolean updateHrRole(Integer hrid, Integer[] rids) {
         hrRoleMapper.deleteByHrid(hrid);
         return hrRoleMapper.addRole(hrid, rids) == rids.length;
     }
 
+    /**
+     *
+     */
+    public Integer deleteHrById(Integer id) {
+        return hrMapper.deleteByPrimaryKey(id);
+    }
 }

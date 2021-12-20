@@ -13,4 +13,6 @@ public interface HrMapper {
     List<Hr> getAllHrs(@Param("hrid") Integer hrid,  @Param("keywords") String keywords);
 
     Integer updateByPrimaryKeySelective(Hr hr);
+
+    Integer deleteByPrimaryKey(Integer id);
 }

@@ -69,5 +69,9 @@
         </set>
         where id = #{id,jdbcType=INTEGER}
     </update>
+
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+        delete from hr where id = #{id,jdbcType=INTEGER}
+    </delete>
 </mapper>
 

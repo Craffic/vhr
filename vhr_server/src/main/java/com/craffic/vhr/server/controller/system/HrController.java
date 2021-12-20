@@ -52,4 +52,16 @@ public class HrController {
         }
         return RespBean.error("更新失败!");
     }
+
+    /**
+     * 根据hrid删除hr
+     */
+    @DeleteMapping("/delete/{id}")
+    public RespBean deleteHrById(@PathVariable Integer id) {
+        Integer count = hrService.deleteHrById(id);
+        if (count == 1) {
+            return RespBean.ok("删除成功!");
+        }
+        return RespBean.error("删除失败!");
+    }
 }

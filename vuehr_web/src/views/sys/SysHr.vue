@@ -11,7 +11,7 @@
       <el-card class="hr-card" v-for="(hr, index) in hrs" :key="index">
         <div slot="header" class="clearfix">
           <span>{{hr.name}}</span>
-          <el-button style="float: right; padding: 3px 0;color: red" type="text" icon="el-icon-delete">操作按钮</el-button>
+          <el-button style="float: right; padding: 3px 0;color: red" type="text" icon="el-icon-delete" @click="deleteHr(hr)"></el-button>
         </div>
         <div>
           <div class="img-container">
@@ -63,6 +63,7 @@
 
 <script>
 import {getRequest, putRequest} from "@/utils/api";
+import {deleteRequest} from "../../utils/api";
 
 export default {
   name: "SysHr",
@@ -149,8 +150,6 @@ export default {
           changeFlag = true;
         }
       }
-
-
       if (changeFlag){
         let url = '/system/hr/update/roles?hrid=' + hr.id;
         this.selectedRoles.forEach(rid => {
@@ -162,6 +161,23 @@ export default {
           }
         })
       }
+    },
+    /*根据hrid删除hr*/
+    deleteHr(hr){
+      this.$confirm('此操作将永久删除【' +hr.name+ '】用户, 是否继续?', '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning'
+      }).then(() => {
+        deleteRequest('/system/hr/delete/' + hr.id).then(resp => {
+          this.initHrs();
+        })
+      }).catch(() => {
+        this.$message({
+          type: 'info',
+          message: '已取消删除'
+        });
+      });
     }
   }
 }

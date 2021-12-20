@@ -5,7 +5,11 @@
             <el-button icon="el-icon-plus" size="mini" type="primary" @click="addPosition">添加</el-button>
         </div>
         <div class="positionTable">
-            <el-table :data="positions" style="width: 70%" @selection-change="handleSelectionChange">
+            <el-table :data="positions" style="width: 70%" @selection-change="handleSelectionChange"
+                      v-loading="loading"
+                      element-loading-text="正在加载..."
+                      element-loading-spinner="el-icon-loading"
+                      element-loading-background="rgba(0, 0, 0, 0.8)">
                 <el-table-column type="selection" width="55"></el-table-column>
                 <el-table-column prop="id" label="编号" width="150"></el-table-column>
                 <el-table-column prop="name" label="职位名称" width="250"></el-table-column>
@@ -53,6 +57,7 @@
         name: "PosManager",
         data() {
             return {
+                loading: false,
                 pos: {
                     name: '',
                     enabled: false
@@ -93,8 +98,12 @@
               this.updatePos.name = '';
             },
             initPositions(){
+                this.loading = true;
                 getRequest("/system/basic/position/queryAll").then(resp=>{
-                    this.positions = resp;
+                    this.loading = false;
+                    if (resp) {
+                        this.positions = resp;
+                    }
                 })
             },
             /*编辑*/

@@ -7,7 +7,11 @@
 
       <el-tree style="width: 500px" class="filter-tree" :data="depts"
           :props="defaultProps" :filter-node-method="filterNode" ref="tree"
-          :expand-on-click-node="false">
+          :expand-on-click-node="false"
+          v-loading="loading"
+          element-loading-text="正在加载..."
+          element-loading-spinner="el-icon-loading"
+          element-loading-background="rgba(0, 0, 0, 0.8)">
         <!--编辑和删除按钮-->
         <span class="custom-tree-node" slot-scope="{ node, data }" style="display: flex;justify-content: space-between;width: 100%">
         <span>{{ node.label }}</span>
@@ -43,6 +47,7 @@
 import {deleteRequest, getRequest, postRequest} from "@/utils/api";
 
     export default {
+        loading: false,
         name: "DepManager",
         data(){
           return {
@@ -81,7 +86,9 @@ import {deleteRequest, getRequest, postRequest} from "@/utils/api";
           },
           /*调用接口获取所有部门节点*/
           initDepts(){
+            this.loading = true;
             getRequest('/system/basic/department/query/all_depts').then(reps => {
+              this.loading = false;
               if (reps) {
                 this.depts = reps;
               }

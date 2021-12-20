@@ -1,6 +1,10 @@
 <template>
   <div>
-    <el-form :rules="rules" :model="loginForm" ref="loginForm" class="loginContainer">
+    <el-form :rules="rules" :model="loginForm" ref="loginForm" class="loginContainer"
+              v-loading="loading"
+              element-loading-text="正在登录..."
+              element-loading-spinner="el-icon-loading"
+              element-loading-background="rgba(0, 0, 0, 0.8)">
       <h3 class="loginTitle">系统登录</h3>
       <el-form-item prop="username">
         <el-input type="text" ref="username" v-model="loginForm.username" auto-complete="off" placeholder="请输入用户名"></el-input>
@@ -22,6 +26,8 @@ export default {
   name: "Login",
   data() {
     return {
+      /*登录加载*/
+      loading: false,
       // 登录规则
       rules: {
         username: [{required:true, message: '请输入用户名', trigger: 'blur'}],
@@ -41,7 +47,10 @@ export default {
     submitLogin(){
       this.$refs.loginForm.validate((valid) => {
         if (valid) {
+          this.loading = true;
           postKeyValueRequest('/doLogin', this.loginForm).then(response => {
+            /*登录成功还是失败后，登录条都是隐藏掉*/
+            this.loading = false;
             if (response){
               window.sessionStorage.setItem("user", JSON.stringify(response.obj));
               this.$router.replace('/home');

@@ -10,7 +10,11 @@
         </div>
         <!--表格数据-->
         <div style="margin-top: 10px">
-          <el-table :data="jls" border style="width: 70%" size="small" @selection-change="handleSelectionChange">
+          <el-table :data="jls" border style="width: 70%" size="small" @selection-change="handleSelectionChange"
+                    v-loading="loading"
+                    element-loading-text="正在加载..."
+                    element-loading-spinner="el-icon-loading"
+                    element-loading-background="rgba(0, 0, 0, 0.8)">
             <el-table-column type="selection" width="55"></el-table-column>
             <el-table-column prop="id" label="编号" width="120" size="small"></el-table-column>
             <el-table-column prop="name" label="职称名称" width="250" size="small"></el-table-column>
@@ -75,6 +79,7 @@ import {deleteRequest, getRequest, postRequest, putRequest} from "@/utils/api";
         name: "JobLevelManager",
         data(){
           return{
+            loading: false,
             jl:{
               name: '',
               titleLevel: '',
@@ -141,7 +146,9 @@ import {deleteRequest, getRequest, postRequest, putRequest} from "@/utils/api";
         },
         /*查询所有职称*/
         initJobLevels(){
+          this.loading = true;
           getRequest("/system/basic/job_level/queryAll").then(resp => {
+            this.loading = false;
             if (resp){
               // 请求成功
               this.jls = resp;

@@ -1,5 +1,8 @@
 <template>
-    <div>
+    <div v-loading="globalLoading"
+         element-loading-text="正在加载..."
+         element-loading-spinner="el-icon-loading"
+         element-loading-background="rgba(0, 0, 0, 0.8)">
       <div class="permissManaTool">
         <el-input size="small" placeholder="请输入角色英文名" v-model="role.name">
           <template slot="prepend">ROLE_</template>
@@ -8,7 +11,11 @@
         <el-button size="small" icon="el-icon-plus" type="primary" @click="addRoles">添加角色</el-button>
       </div>
       <div class="permissManaMain">
-        <el-collapse v-model="activeName" accordion @change="change">
+        <el-collapse v-model="activeName" accordion @change="change"
+                     v-loading="loading"
+                     element-loading-text="正在加载..."
+                     element-loading-spinner="el-icon-loading"
+                     element-loading-background="rgba(0, 0, 0, 0.8)">
           <el-collapse-item :title="role.nameZh" :name="role.id" v-for="(role, index) in roles" :key="index">
             <el-card class="box-card">
               <div slot="header" class="clearfix">
@@ -53,7 +60,9 @@ import {deleteRequest, getRequest, postRequest, putRequest} from "@/utils/api";
               label: 'name'
             },
             /*每个角色对应的菜单id*/
-            selectedMenus: []
+            selectedMenus: [],
+            loading: false,
+              globalLoading: false
           }
         },
         mounted() {
@@ -62,7 +71,9 @@ import {deleteRequest, getRequest, postRequest, putRequest} from "@/utils/api";
         methods:{
             /*查询所有的角色*/
             initRoles(){
+              this.loading = true;
               getRequest("/system/basic/permiss/query/all_role").then(resp => {
+                  this.loading = false;
                   if (resp) {
                     this.roles = resp;
                   }
@@ -116,7 +127,9 @@ import {deleteRequest, getRequest, postRequest, putRequest} from "@/utils/api";
             /*添加角色*/
             addRoles(){
                 if (this.role.name && this.role.nameZh){
-                  postRequest('/system/basic/permiss/role', this.role).then(resp => {
+                    this.globalLoading = true;
+                    postRequest('/system/basic/permiss/role', this.role).then(resp => {
+                    this.globalLoading = false;
                     if (resp) {
                       this.role.name = '';
                       this.role.nameZh = '';

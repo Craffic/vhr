@@ -32,7 +32,25 @@
             </div>
             <div>用户角色：
               <el-tag style="margin-right: 5px" type="success" size="mini" v-for="(role, indexj) in hr.roles" :key="indexj">{{role.nameZh}}</el-tag>
-              <el-button icon="el-icon-more" size="mini" type="text"></el-button>
+              <!--修改角色弹出框-->
+              <el-popover
+                      placement="bottom"
+                      title="角色列表"
+                      width="200"
+                      trigger="click"
+                      @show="showPop(hr)"
+                      @hide="hidePop(hr)">
+                <!--角色多选框-->
+                <el-select v-model="selectedRoles" placeholder="请选择" multiple>
+                  <el-option
+                          v-for="(role, indexk) in all_roles"
+                          :key="indexk"
+                          :label="role.nameZh"
+                          :value="role.id"><!--role.id是提交到服务器的数据-->
+                  </el-option>
+                </el-select>
+                <el-button  slot="reference" icon="el-icon-more" size="mini" type="text"></el-button>
+              </el-popover>
             </div>
             <div>备注：{{hr.remark}}</div>
           </div>
@@ -51,7 +69,11 @@ export default {
     return {
       keywords: '',
       /*查询返回所有的hr数组*/
-      hrs: []
+      hrs: [],
+      /*所有角色集合，供角色多选框用*/
+      all_roles: [],
+      /*用户对应的角色*/
+      selectedRoles: []
     }
   },
   mounted(){
@@ -79,6 +101,66 @@ export default {
           this.initHrs();
         }
       })
+    },
+    /*查询所有角色列表*/
+    initRoles(){
+      getRequest('/system/hr/query/all_role').then(resp => {
+        if (resp) {
+          this.all_roles = resp;
+        }
+      })
+    },
+    /*点击pop弹框调用的方法*/
+    showPop(hr){
+      this.initRoles();
+      /*先清空一下历史数据*/
+      this.selectedRoles = [];
+      /*根据hr.roles遍历role，放到selectedRoles里*/
+      let roles = hr.roles;
+      roles.forEach(r => {
+        this.selectedRoles.push(r.id);
+      })
+    },
+    /*隐藏弹框，调用修改用户角色接口*/
+    hidePop(hr) {
+      let changeFlag = false;
+      let roles = [];
+      Object.assign(roles, hr.roles);
+      /*如果用户没修改过角色集合，再离开弹框的话还是会更新成功*/
+      /*所以要比对hr.roles和this.selectedRoles是否一致，才做更新操作*/
+      /*1. 如果两边集合长度都不一致，肯定做过修改*/
+      if (this.selectedRoles.length != hr.roles.length){
+        changeFlag = true;
+      } else {
+        /*2. 遍历两个集合，相同的就移除一个集合里的数据，到最后没数据就说明两个集合一致*/
+        for (let i = 0; i < roles.length; i++) {
+          let role = roles[i];
+          for (let j = 0; j < this.selectedRoles.length; j++) {
+            let sr = this.selectedRoles[j];
+            if (role.id == sr) {
+              roles.splice(i, 1);
+              i--;
+              break;
+            }
+          }
+        }
+        if (roles.length != 0) {
+          changeFlag = true;
+        }
+      }
+
+
+      if (changeFlag){
+        let url = '/system/hr/update/roles?hrid=' + hr.id;
+        this.selectedRoles.forEach(rid => {
+          url += '&rids=' + rid;
+        })
+        putRequest(url).then(resp => {
+          if (resp) {
+            this.initHrs();
+          }
+        })
+      }
     }
   }
 }

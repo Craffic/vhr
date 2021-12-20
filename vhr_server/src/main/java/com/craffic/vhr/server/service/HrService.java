@@ -1,6 +1,7 @@
 package com.craffic.vhr.server.service;
 
 import com.craffic.vhr.server.dao.HrMapper;
+import com.craffic.vhr.server.dao.HrRoleMapper;
 import com.craffic.vhr.server.dao.RoleMapper;
 import com.craffic.vhr.server.domain.Hr;
 import com.craffic.vhr.server.domain.Role;
@@ -10,6 +11,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -20,6 +22,10 @@ public class HrService implements UserDetailsService {
     private HrMapper hrMapper;
     @Autowired
     private RoleMapper roleMapper;
+    @Autowired
+    private RoleService roleService;
+    @Autowired
+    HrRoleMapper hrRoleMapper;
 
     @Override
     public UserDetails loadUserByUsername(String userName) throws UsernameNotFoundException {
@@ -43,4 +49,19 @@ public class HrService implements UserDetailsService {
     public Integer updateHr(Hr hr) {
         return hrMapper.updateByPrimaryKeySelective(hr);
     }
+
+    /**
+     * 获取所有角色
+     * @return
+     */
+    public List<Role> getAllRoles() {
+        return roleService.getAllRoles();
+    }
+
+    @Transactional
+    public boolean updateHrRole(Integer hrid, Integer[] rids) {
+        hrRoleMapper.deleteByHrid(hrid);
+        return hrRoleMapper.addRole(hrid, rids) == rids.length;
+    }
+
 }

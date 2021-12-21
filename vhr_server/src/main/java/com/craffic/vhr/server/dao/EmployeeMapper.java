@@ -13,4 +13,6 @@ public interface EmployeeMapper {
     List<Employee> getEmployeeByPage(@Param("page") Integer page, @Param("size") Integer size, @Param("keyword") String keyword, @Param("emp") Employee employee, @Param("beginDateScope") Date[] beginDateScope);
 
     Long getTotal(@Param("keyword") String keyword, @Param("emp") Employee employee,@Param("beginDateScope") Date[] beginDateScope);
+
+    int insertSelective(Employee record);
 }

@@ -30,4 +30,8 @@ public class EmployeeService {
         return bean;
     }
 
+    public Integer addEmp(Employee employee) {
+        return employeeMapper.insertSelective(employee);
+    }
+
 }

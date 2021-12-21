@@ -3,8 +3,10 @@
     <div style="display: flex;justify-content: space-between">
         <!--输入框、搜索、高级搜索-->
         <div>
-            <el-input placeholder="请输入员工姓名进行搜索..." prefix-icon="el-icon-search" style="width: 300px;margin-right: 10px"></el-input>
-            <el-button type="primary" icon="el-icon-search">搜索</el-button>
+            <el-input placeholder="请输入员工姓名进行搜索..." prefix-icon="el-icon-search" style="width: 300px;margin-right: 10px"
+                      v-model="keyword" @keydown.enter.native="initEmps"
+                      clearable @clear="initEmps"></el-input>
+            <el-button type="primary" icon="el-icon-search" @click="initEmps">搜索</el-button>
             <el-button type="primary"><i class="fa fa-angle-double-down" style="margin-right: 5px" aria-hidden="true"></i>高级搜索</el-button>
         </div>
         <!--导出、导入、添加用户-->
@@ -78,7 +80,8 @@
               loading: false,
               total: 0,
               page:1,
-              size: 10
+              size: 10,
+              keyword: ''
           }
       },
       methods: {
@@ -94,7 +97,7 @@
           },
           initEmps() {
               this.loading = true;
-              getRequest('/emp/basic/?page=' + this.page + '&size=' + this.size).then(resp => {
+              getRequest('/emp/basic/?page=' + this.page + '&size=' + this.size + '&keyword=' + this.keyword).then(resp => {
                   this.loading = false;
                   if (resp) {
                       this.emps = resp.data;

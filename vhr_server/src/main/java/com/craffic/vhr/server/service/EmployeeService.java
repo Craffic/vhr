@@ -18,12 +18,12 @@ public class EmployeeService {
     /**
      * 分页查询员工
      */
-    public RespPageBean getEmployeeByPage(Integer page, Integer size, Employee employee, Date[] beginDateScope) {
+    public RespPageBean getEmployeeByPage(Integer page, Integer size, String keyword, Employee employee, Date[] beginDateScope) {
         if (page != null && size != null) {
             page = (page - 1) * size;
         }
-        List<Employee> data = employeeMapper.getEmployeeByPage(page, size, employee, beginDateScope);
-        Long total = employeeMapper.getTotal(employee, beginDateScope);
+        List<Employee> data = employeeMapper.getEmployeeByPage(page, size, keyword, employee, beginDateScope);
+        Long total = employeeMapper.getTotal(keyword, employee, beginDateScope);
         RespPageBean bean = new RespPageBean();
         bean.setData(data);
         bean.setTotal(total);

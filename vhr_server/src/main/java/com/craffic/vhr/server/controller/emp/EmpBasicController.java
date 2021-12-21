@@ -22,8 +22,8 @@ public class EmpBasicController {
      * 分页查询
      */
     @GetMapping("/")
-    public RespPageBean getEmployeeByPage(@RequestParam(defaultValue = "1") Integer page, @RequestParam(defaultValue = "10") Integer size, Employee employee, Date[] beginDateScope) {
-        return employeeService.getEmployeeByPage(page, size, employee, beginDateScope);
+    public RespPageBean getEmployeeByPage(@RequestParam(defaultValue = "1") Integer page, @RequestParam(defaultValue = "10") Integer size, String keyword, Employee employee, Date[] beginDateScope) {
+        return employeeService.getEmployeeByPage(page, size,keyword, employee, beginDateScope);
     }
 
 }

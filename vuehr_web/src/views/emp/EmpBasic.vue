@@ -54,6 +54,15 @@
                 </template>
             </el-table-column>
         </el-table>
+        <div style="display: flex;justify-content: flex-end">
+            <el-pagination
+                    background
+                    @current-change="currentChange"
+                    @size-change="sizeChange"
+                    layout="sizes, prev, pager, next, jumper, ->, total, slot"
+                    :total="total">
+            </el-pagination>
+        </div>
     </div>
 </div>
 </template>
@@ -66,16 +75,30 @@
       data() {
           return {
               emps: [],
-              loading: false
+              loading: false,
+              total: 0,
+              page:1,
+              size: 10
           }
       },
       methods: {
+          /*当前页*/
+          currentChange(currentPage) {
+              this.page = currentPage;
+              this.initEmps();
+          },
+          /*改变每页大小*/
+          sizeChange(currentSize){
+              this.size = currentSize;
+              this.initEmps();
+          },
           initEmps() {
               this.loading = true;
-              getRequest('/emp/basic/').then(resp => {
+              getRequest('/emp/basic/?page=' + this.page + '&size=' + this.size).then(resp => {
                   this.loading = false;
                   if (resp) {
                       this.emps = resp.data;
+                      this.total = resp.total;
                   }
               })
           }

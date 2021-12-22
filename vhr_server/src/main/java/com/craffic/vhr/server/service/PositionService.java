@@ -36,4 +36,8 @@ public class PositionService {
     public Integer updatePosition(Position position) {
         return positionMapper.updatePosition(position);
     }
+
+    public List<Position> getAllPositions() {
+        return positionMapper.queryAllPosition();
+    }
 }

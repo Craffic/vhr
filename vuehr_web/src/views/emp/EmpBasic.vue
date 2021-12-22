@@ -93,16 +93,16 @@
                     <el-col :span="7">
                         <el-form-item label="政治面貌：" prop="politicId">
                             <el-select v-model="emp.politicId" placeholder="政治面貌" style="width: 200px" size="mini">
-                                <el-option v-for="item in options" :key="emp.politicId" :label="item.label" ></el-option>
+                                <el-option v-for="item in politicsstatus" :key="item.id" :label="item.name" :value="item.id"></el-option>
                             </el-select>
                         </el-form-item>
                     </el-col>
                 </el-row>
                 <el-row>
                     <el-col :span="6">
-                        <el-form-item label="民族：" prop="politicId">
+                        <el-form-item label="民族：" prop="nationId">
                             <el-select v-model="emp.nationId" placeholder="民族" style="width: 150px" size="mini">
-                                <el-option v-for="item in options" :key="emp.nationId" :label="item.label" ></el-option>
+                                <el-option v-for="nation in nations" :key="nation.id" :label="nation.name" :value="nation.id"></el-option>
                             </el-select>
                         </el-form-item>
                     </el-col>
@@ -126,14 +126,14 @@
                     <el-col :span="6">
                         <el-form-item label="职位：" prop="posId">
                             <el-select v-model="emp.posId" placeholder="职位" style="width: 150px" size="mini">
-                                <el-option v-for="item in options" :key="emp.posId" :label="item.label" ></el-option>
+                                <el-option v-for="position in positions" :key="position.id" :label="position.name" :value="position.id"></el-option>
                             </el-select>
                         </el-form-item>
                     </el-col>
                     <el-col :span="5">
                         <el-form-item label="职称：" prop="jobLevelId">
                             <el-select v-model="emp.jobLevelId" placeholder="职称" style="width: 150px" size="mini">
-                                <el-option v-for="item in options" :key="emp.jobLevelId" :label="item.label" ></el-option>
+                                <el-option v-for="jl in joblevels" :key="jl.id" :label="jl.name" :value="jl.id"></el-option>
                             </el-select>
                         </el-form-item>
                     </el-col>
@@ -157,7 +157,8 @@
                     <el-col :span="5">
                         <el-form-item label="学历：" prop="tiptopDegree">
                             <el-select v-model="emp.tiptopDegree" placeholder="学历" style="width: 150px" size="mini">
-                                <el-option v-for="item in options" :key="emp.tiptopDegree" :label="item.label" ></el-option>
+                                <!--<el-option></el-option>tiptopDegree-->
+                                <el-option v-for="item in tiptopDegree" :key="item" :label="item" :value="item"></el-option>
                             </el-select>
                         </el-form-item>
                     </el-col>
@@ -242,6 +243,12 @@
               size: 10,
               keyword: '',
               empDialogVisible: false,
+              /*下拉框集合*/
+              nations: [],
+              politicsstatus: [],
+              joblevels: [],
+              positions: [],
+              tiptopDegree: ['博士后', '博士', '研究生', '本科', '大专', '高中', '中专', '初中', '小学', '其他'],
               emp:{name: "姚森",
                    gender: "男",
                    birthday: "1991-02-05",
@@ -274,6 +281,39 @@
           }
       },
       methods: {
+          /*添加员工 - 加载下拉框数据*/
+          initSelectionData(){
+              // 从sessionStorage里拿下拉框数据，如果从sessionStorage里拿不到数据，则重新调用接口获取数据
+              if (!window.sessionStorage.getItem("nations")) {
+                  getRequest('/emp/basic/nations').then(resp => {
+                      if (resp) {
+                          this.nations = resp;
+                      }
+                  })
+              }
+              if (!window.sessionStorage.getItem("politicsstatus")) {
+                  getRequest('/emp/basic/politicsstatus').then(resp => {
+                      if (resp) {
+                          this.politicsstatus = resp;
+                      }
+                  })
+              }
+              if (!window.sessionStorage.getItem("joblevels")) {
+                  getRequest('/emp/basic/joblevels').then(resp => {
+                      if (resp) {
+                          this.joblevels = resp;
+                      }
+                  })
+              }
+          },
+          /*初始化职位下拉框数据，在弹出添加对话框时调用*/
+          initPositions(){
+              getRequest('/emp/basic/positions').then(resp => {
+                  if (resp) {
+                      this.positions = resp;
+                  }
+              })
+          },
           /*当前页*/
           currentChange(currentPage) {
               this.page = currentPage;
@@ -297,10 +337,13 @@
           /*弹出添加用户对话框*/
           showEmpDialog() {
               this.empDialogVisible = true;
+              this.initPositions();
           }
       },
       mounted() {
           this.initEmps();
+          /*加载添加员工页面下拉框数据*/
+          this.initSelectionData();
       }
     }
 </script>

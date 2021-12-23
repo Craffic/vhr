@@ -22,12 +22,12 @@
                   v-loading="loading"
                   element-loading-text="正在加载..."
                   element-loading-spinner="el-icon-loading"
-                  element-loading-background="rgba(0, 0, 0, 0.8)">
+                  element-loading-background="Transparent">
             <el-table-column type="selection" width="55"></el-table-column>
             <el-table-column prop="name" label="姓名" width="90" fixed align="left"></el-table-column>
             <el-table-column prop="workID" label="工号" width="100" align="left"></el-table-column>
-            <el-table-column prop="birthday" label="出生日期" width="85"></el-table-column>
-            <el-table-column prop="idCard" label="身份证号码" width="120"></el-table-column>
+            <el-table-column prop="birthday" label="出生日期" width="100"></el-table-column>
+            <el-table-column prop="idCard" label="身份证号码" width="180"></el-table-column>
             <el-table-column prop="wedlock" label="婚姻状况"></el-table-column>
             <el-table-column prop="nation.name" label="民族"></el-table-column>
             <el-table-column prop="nativePlace" label="籍贯"></el-table-column>
@@ -151,7 +151,7 @@
                 <el-row>
                     <el-col :span="6">
                         <el-form-item label="工号：" prop="departmentId">
-                            <el-input placeholder="工号" v-model="emp.workID" prefix-icon="el-icon-edit" style="width: 150px" size="mini"></el-input>
+                            <el-input placeholder="工号" v-model="emp.workID" prefix-icon="el-icon-edit" style="width: 150px" size="mini" disabled></el-input>
                         </el-form-item>
                     </el-col>
                     <el-col :span="5">
@@ -269,7 +269,7 @@
                    school: "西北大学",
                    beginDate: "2017-01-02",
                    workState: "在职",
-                   workID: "00000005",
+                   workID: '',
                    contractTerm: 7,
                    conversionTime: "2017-04-02",
                    notWorkDate: null,
@@ -338,12 +338,23 @@
           showEmpDialog() {
               this.empDialogVisible = true;
               this.initPositions();
+          },
+          /*生成工号*/
+          generateWorkID(){
+              getRequest('/emp/basic/maxWorkID').then(resp => {
+                  this.loading = false;
+                  if (resp) {
+                      this.emp.workID = resp.obj;
+                  }
+              })
           }
       },
       mounted() {
           this.initEmps();
           /*加载添加员工页面下拉框数据*/
           this.initSelectionData();
+          /*打开弹框就显示工号*/
+          this.generateWorkID();
       }
     }
 </script>

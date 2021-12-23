@@ -303,4 +303,8 @@
       </if>
     </trim>
   </insert>
+
+  <select id="maxWorkID" resultType="java.lang.Integer">
+    select max(workID) from employee
+  </select>
 </mapper>

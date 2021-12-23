@@ -15,4 +15,6 @@ public interface EmployeeMapper {
     Long getTotal(@Param("keyword") String keyword, @Param("emp") Employee employee,@Param("beginDateScope") Date[] beginDateScope);
 
     int insertSelective(Employee record);
+
+    Integer maxWorkID();
 }

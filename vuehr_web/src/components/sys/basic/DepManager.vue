@@ -47,7 +47,7 @@
 import {deleteRequest, getRequest, postRequest} from "@/utils/api";
 
     export default {
-        loading: false,
+
         name: "DepManager",
         data(){
           return {
@@ -65,6 +65,7 @@ import {deleteRequest, getRequest, postRequest} from "@/utils/api";
               children: 'children',
               label: 'name'
             },
+            loading: false,
             dialogVisible: false
           }
         },

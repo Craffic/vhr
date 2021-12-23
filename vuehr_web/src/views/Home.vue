@@ -19,7 +19,6 @@
     <el-container>
       <el-aside width="200px">
         <el-menu class="el-menu-vertical-demo" router unique-opened>
-<!--          <el-submenu index="1" v-for="(item, index) in this.$router.options.routes" v-if="!item.hidden" :key="index">-->
           <el-submenu :index="index+''" v-for="(item, index) in routes" v-if="!item.hidden" :key="index">
             <template slot="title">
               <i :class="item.iconCls" style="color: #4e9cef;margin-right: 5px"></i>

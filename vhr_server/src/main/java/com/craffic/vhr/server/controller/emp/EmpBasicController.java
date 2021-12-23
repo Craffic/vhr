@@ -24,6 +24,8 @@ public class EmpBasicController {
     JobLevelService jobLevelService;
     @Autowired
     PositionService positionService;
+    @Autowired
+    DepartmentService departmentService;
     /**
      * 分页查询
      */
@@ -83,5 +85,14 @@ public class EmpBasicController {
     public RespBean maxWorkID() {
         RespBean respBean = RespBean.build().setStatus(200).setObj(String.format("%08d", employeeService.maxWorkID() + 1));
         return respBean;
+    }
+
+    /**
+     * 获取所有部门节点 - 用于员工添加页面的所属部门的部门树展示
+     * @return
+     */
+    @GetMapping("/deps")
+    public List<Department> getAllDepartments() {
+        return departmentService.queryAllDepartments();
     }
 }

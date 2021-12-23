@@ -139,7 +139,18 @@
                     </el-col>
                     <el-col :span="6">
                         <el-form-item label="所属部门：" prop="departmentId">
-                            <el-input placeholder="请输入员工姓名" v-model="emp.departmentId" prefix-icon="el-icon-edit" style="width: 150px" size="mini"></el-input>
+                            <el-popover
+                                    placement="right"
+                                    title="请选择部门"
+                                    width="200"
+                                    trigger="manual"
+                                    v-model="departmentVisable">
+                                <div slot="reference"
+                                     style="width: 150px;height: 26px;display: inline-flex;font-size: 13px;border: 1px solid #dedede;border-radius: 5px;
+                                            cursor: pointer;align-items: center;padding-left: 8px;box-sizing: border-box"
+                                     @click="showDepView">{{inputDepName}}</div>
+                                <el-tree :data="departmentTree" :props="defaultProps" @node-click="handleNodeClick" default-expand-all></el-tree>
+                            </el-popover>
                         </el-form-item>
                     </el-col>
                     <el-col :span="7">
@@ -237,6 +248,10 @@
       data() {
           return {
               emps: [],
+              /*部门树结构体*/
+              departmentTree:[],
+              /*选中后的部门名称*/
+              inputDepName: '',
               loading: false,
               total: 0,
               page:1,
@@ -277,6 +292,12 @@
                    endContract: "2024-01-17",
                    workAge: null,
                    salary: null
+              },
+              /*添加页面 - 部门树弹框*/
+              departmentVisable: false,
+              defaultProps: {
+                  children: 'children',
+                  label: 'name'
               }
           }
       },
@@ -290,6 +311,9 @@
                           this.nations = resp;
                       }
                   })
+              } else {
+                  // 从sessionStorage里有数据的，就从从sessionStorage里赋值给表单变量
+                  this.nations = JSON.parse(window.sessionStorage.getItem("nations"));
               }
               if (!window.sessionStorage.getItem("politicsstatus")) {
                   getRequest('/emp/basic/politicsstatus').then(resp => {
@@ -297,6 +321,8 @@
                           this.politicsstatus = resp;
                       }
                   })
+              } else {
+                  this.politicsstatus = JSON.parse(window.sessionStorage.getItem("politicsstatus"));
               }
               if (!window.sessionStorage.getItem("joblevels")) {
                   getRequest('/emp/basic/joblevels').then(resp => {
@@ -304,6 +330,17 @@
                           this.joblevels = resp;
                       }
                   })
+              } else {
+                  this.joblevels = JSON.parse(window.sessionStorage.getItem("joblevels"));
+              }
+              if (!window.sessionStorage.getItem("deps")) {
+                  getRequest('/emp/basic/deps').then(resp => {
+                      if (resp) {
+                          this.departmentTree = resp;
+                      }
+                  })
+              } else {
+                  this.departmentTree = JSON.parse(window.sessionStorage.getItem("deps"));
               }
           },
           /*初始化职位下拉框数据，在弹出添加对话框时调用*/
@@ -347,6 +384,16 @@
                       this.emp.workID = resp.obj;
                   }
               })
+          },
+          /*弹出部门树弹框*/
+          showDepView(){
+              this.departmentVisable = !this.departmentVisable
+          },
+          /*点击部门书*/
+          handleNodeClick(data) {
+              this.inputDepName = data.name;
+              this.emp.departmentId = data.id;
+              this.departmentVisable = !this.departmentVisable;
           }
       },
       mounted() {

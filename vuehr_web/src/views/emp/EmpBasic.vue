@@ -234,14 +234,14 @@
         </div>
         <span slot="footer" class="dialog-footer">
             <el-button @click="dialogVisible = false">取 消</el-button>
-            <el-button type="primary" @click="dialogVisible = false">确 定</el-button>
+            <el-button type="primary" @click="addEmp">确 定</el-button>
         </span>
     </el-dialog>
 </div>
 </template>
 
 <script>
-    import {getRequest} from "../../utils/api";
+    import {getRequest, postRequest} from "../../utils/api";
 
     export default {
       name: "EmpBasic",
@@ -302,6 +302,15 @@
           }
       },
       methods: {
+          /*添加员工方法*/
+          addEmp(){
+              postRequest('/emp/basic/', this.emp).then(resp => {
+                  if (resp) {
+                      this.empDialogVisible = false;
+                      this.initEmps();
+                  }
+              })
+          },
           /*添加员工 - 加载下拉框数据*/
           initSelectionData(){
               // 从sessionStorage里拿下拉框数据，如果从sessionStorage里拿不到数据，则重新调用接口获取数据

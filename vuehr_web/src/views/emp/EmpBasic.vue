@@ -32,7 +32,7 @@
             <el-table-column prop="nation.name" label="民族"></el-table-column>
             <el-table-column prop="nativePlace" label="籍贯"></el-table-column>
             <el-table-column prop="politicId" label="政治面貌"></el-table-column>
-            <el-table-column prop="email" label="电子邮件" width="180"></el-table-column>
+            <el-table-column prop="email" label="电子邮箱" width="180"></el-table-column>
             <el-table-column prop="phone" label="电话号码" width="120"></el-table-column>
             <el-table-column prop="address" label="联系地址" width="300"></el-table-column>
             <el-table-column prop="department.name" label="所属部门" width="90"></el-table-column>
@@ -70,7 +70,7 @@
     <!--添加用户对话框-->
     <el-dialog title="添加用户" :visible.sync="empDialogVisible" width="60%">
         <div>
-            <el-form>
+            <el-form :rules="rules" :model="emp" ref="empForm">
                 <el-row>
                     <el-col :span="6">
                         <el-form-item label="姓名：" prop="name">
@@ -155,7 +155,7 @@
                     </el-col>
                     <el-col :span="7">
                         <el-form-item label="电话号码：" prop="phone">
-                            <el-input placeholder="电话号码" v-model="emp.phone" prefix-icon="el-icon-phone" style="width: 200px" size="mini"></el-input>
+                            <el-input placeholder="请输入电话号码" v-model="emp.phone" prefix-icon="el-icon-phone" style="width: 200px" size="mini"></el-input>
                         </el-form-item>
                     </el-col>
                 </el-row>
@@ -167,20 +167,19 @@
                     </el-col>
                     <el-col :span="5">
                         <el-form-item label="学历：" prop="tiptopDegree">
-                            <el-select v-model="emp.tiptopDegree" placeholder="学历" style="width: 150px" size="mini">
-                                <!--<el-option></el-option>tiptopDegree-->
+                            <el-select v-model="emp.tiptopDegree" placeholder="请选择学历" style="width: 150px" size="mini">
                                 <el-option v-for="item in tiptopDegree" :key="item" :label="item" :value="item"></el-option>
                             </el-select>
                         </el-form-item>
                     </el-col>
                     <el-col :span="6">
-                        <el-form-item label="毕业院校：" prop="name">
-                            <el-input placeholder="毕业院校" v-model="emp.school" prefix-icon="el-icon-edit" style="width: 150px" size="mini"></el-input>
+                        <el-form-item label="毕业院校：" prop="school">
+                            <el-input placeholder="请输入毕业院校" v-model="emp.school" prefix-icon="el-icon-edit" style="width: 150px" size="mini"></el-input>
                         </el-form-item>
                     </el-col>
-                    <el-col :span="6">
-                        <el-form-item label="专业名称：" prop="name">
-                            <el-input placeholder="专业名称" v-model="emp.specialty" prefix-icon="el-icon-edit" style="width: 200px" size="mini"></el-input>
+                    <el-col :span="7">
+                        <el-form-item label="专业名称：" prop="specialty">
+                            <el-input placeholder="请输入专业名称" v-model="emp.specialty" prefix-icon="el-icon-edit" style="width: 200px" size="mini"></el-input>
                         </el-form-item>
                     </el-col>
                 </el-row>
@@ -196,7 +195,7 @@
                         </el-form-item>
                     </el-col>
                     <el-col :span="6">
-                        <el-form-item label="合同起始日期：" prop="birthday">
+                        <el-form-item label="合同起始日期：" prop="beginContract">
                             <el-date-picker v-model="emp.beginContract" type="date" placeholder="合同起始日期" size="mini" value-format="yyyy-MM-dd" style="width: 130px"></el-date-picker>
                         </el-form-item>
                     </el-col>
@@ -207,12 +206,12 @@
                     </el-col>
                 </el-row>
                 <el-row>
-                    <el-col :span="6">
+                    <el-col :span="8">
                         <el-form-item label="身份证号：" prop="idCard">
                             <el-input placeholder="请输入身份证号" v-model="emp.idCard" prefix-icon="el-icon-edit" style="width: 180px" size="mini"></el-input>
                         </el-form-item>
                     </el-col>
-                    <el-col :span="6">
+                    <el-col :span="8">
                         <el-form-item label="招聘形式：" prop="engageForm">
                             <el-radio-group v-model="emp.engageForm">
                                 <el-radio label="劳动合同">劳动合同</el-radio>
@@ -220,8 +219,8 @@
                             </el-radio-group>
                         </el-form-item>
                     </el-col>
-                    <el-col :span="6">
-                        <el-form-item label="wedlock：" prop="engageForm">
+                    <el-col :span="8">
+                        <el-form-item label="婚姻状况：" prop="engageForm">
                             <el-radio-group v-model="emp.wedlock">
                                 <el-radio label="已婚">已婚</el-radio>
                                 <el-radio label="未婚">未婚</el-radio>
@@ -264,51 +263,122 @@
               joblevels: [],
               positions: [],
               tiptopDegree: ['博士后', '博士', '研究生', '本科', '大专', '高中', '中专', '初中', '小学', '其他'],
-              emp:{name: "姚森",
-                   gender: "男",
-                   birthday: "1991-02-05",
-                   idCard: "610122199102058952",
-                   wedlock: "已婚",
-                   nationId: 1,
-                   nativePlace: "河南",
-                   politicId: 3,
-                   email: "yaosen@qq.com",
-                   phone: "14785559936",
-                   address: "河南洛阳人民大道58号",
-                   departmentId: 92,
-                   jobLevelId: 15,
-                   posId: 34,
-                   engageForm: "劳动合同",
-                   tiptopDegree: "硕士",
-                   specialty: "室内装修设计",
-                   school: "西北大学",
-                   beginDate: "2017-01-02",
-                   workState: "在职",
-                   workID: '',
-                   contractTerm: 7,
-                   conversionTime: "2017-04-02",
-                   notWorkDate: null,
-                   beginContract: "2017-01-02",
-                   endContract: "2024-01-17",
-                   workAge: null,
-                   salary: null
-              },
+              // emp:{name: "姚森",
+              //      gender: "男",
+              //      birthday: "1991-02-05",
+              //      idCard: "610122199102058952",
+              //      wedlock: "已婚",
+              //      nationId: 1,
+              //      nativePlace: "河南",
+              //      politicId: 3,
+              //      email: "yaosen@qq.com",
+              //      phone: "14785559936",
+              //      address: "河南洛阳人民大道58号",
+              //      departmentId: 92,
+              //      jobLevelId: 15,
+              //      posId: 34,
+              //      engageForm: "劳动合同",
+              //      tiptopDegree: "硕士",
+              //      specialty: "室内装修设计",
+              //      school: "西北大学",
+              //      beginDate: "2017-01-02",
+              //      workState: "在职",
+              //      workID: '',
+              //      contractTerm: 7,
+              //      conversionTime: "2017-04-02",
+              //      notWorkDate: null,
+              //      beginContract: "2017-01-02",
+              //      endContract: "2024-01-17",
+              //      workAge: null,
+              //      salary: null
+              // },
+              emp:{name: '',
+              gender: '',
+              birthday: '',
+              idCard: '',
+              wedlock: '',
+              nationId: '',
+              nativePlace: '',
+              politicId: '',
+              email: '',
+              phone: '',
+              address: '',
+              departmentId: '',
+              jobLevelId: '',
+              posId: '',
+              engageForm: '',
+              tiptopDegree: '',
+              specialty: '',
+              school: '',
+              beginDate: '',
+              workState: '在职',
+              workID: '',
+              contractTerm: '',
+              conversionTime: '',
+              notWorkDate: null,
+              beginContract: '',
+              endContract: '',
+              workAge: '',
+              salary: null
+            },
               /*添加页面 - 部门树弹框*/
               departmentVisable: false,
               defaultProps: {
                   children: 'children',
                   label: 'name'
-              }
+              },
+              /*校验规则*/
+            rules: {
+              name: [{required: true, message: '请输入用户名', trigger: 'blur'}],
+              gender: [{required: true, message: '请输入性别', trigger: 'blur'}],
+              birthday: [{required: true, message: '请输入出生日期', trigger: 'blur'}],
+              idCard: [{required: true, message: '请输入身份证号码', trigger: 'blur'}, {
+                pattern: /(^[1-9]\d{5}(18|19|([23]\d))\d{2}((0[1-9])|(10|11|12))(([0-2][1-9])|10|20|30|31)\d{3}[0-9Xx]$)|(^[1-9]\d{5}\d{2}((0[1-9])|(10|11|12))(([0-2][1-9])|10|20|30|31)\d{2}$)/,
+                message: '身份证号码格式不正确',
+                trigger: 'blur'
+              }],
+              wedlock: [{required: true, message: '请输入婚姻状况', trigger: 'blur'}],
+              nationId: [{required: true, message: '请输入您组', trigger: 'blur'}],
+              nativePlace: [{required: true, message: '请输入籍贯', trigger: 'blur'}],
+              politicId: [{required: true, message: '请输入政治面貌', trigger: 'blur'}],
+              email: [{required: true, message: '请输入邮箱地址', trigger: 'blur'}, {
+                type: 'email',
+                message: '邮箱格式不正确',
+                trigger: 'blur'
+              }],
+              phone: [{required: true, message: '请输入电话号码', trigger: 'blur'}],
+              address: [{required: true, message: '请输入员工地址', trigger: 'blur'}],
+              departmentId: [{required: true, message: '请输入部门名称', trigger: 'blur'}],
+              jobLevelId: [{required: true, message: '请输入职称', trigger: 'blur'}],
+              posId: [{required: true, message: '请输入职位', trigger: 'blur'}],
+              engageForm: [{required: true, message: '请输入聘用形式', trigger: 'blur'}],
+              tiptopDegree: [{required: true, message: '请输入学历', trigger: 'blur'}],
+              specialty: [{required: true, message: '请输入专业', trigger: 'blur'}],
+              school: [{required: true, message: '请输入毕业院校', trigger: 'blur'}],
+              beginDate: [{required: true, message: '请输入入职日期', trigger: 'blur'}],
+              workState: [{required: true, message: '请输入工作状态', trigger: 'blur'}],
+              workID: [{required: true, message: '请输入工号', trigger: 'blur'}],
+              contractTerm: [{required: true, message: '请输入合同期限', trigger: 'blur'}],
+              conversionTime: [{required: true, message: '请输入转正日期', trigger: 'blur'}],
+              notworkDate: [{required: true, message: '请输入离职日期', trigger: 'blur'}],
+              beginContract: [{required: true, message: '请输入合同起始日期', trigger: 'blur'}],
+              endContract: [{required: true, message: '请输入合同结束日期', trigger: 'blur'}],
+              workAge: [{required: true, message: '请输入工龄', trigger: 'blur'}],
+            }
           }
       },
       methods: {
           /*添加员工方法*/
           addEmp(){
-              postRequest('/emp/basic/', this.emp).then(resp => {
-                  if (resp) {
+              this.$refs.empForm.validate((valid) => {
+                if (valid) {
+                  postRequest('/emp/basic/', this.emp).then(resp => {
+                    if (resp) {
                       this.empDialogVisible = false;
                       this.initEmps();
-                  }
+                    }
+                  })
+                }
               })
           },
           /*添加员工 - 加载下拉框数据*/

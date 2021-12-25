@@ -21,7 +21,8 @@
                   v-loading="loading"
                   element-loading-text="正在加载..."
                   element-loading-spinner="el-icon-loading"
-                  element-loading-background="Transparent">
+                  element-loading-background="Transparent"
+                  @cell-dblclick="tableDbEdit">
             <el-table-column type="selection" width="55"></el-table-column>
             <el-table-column prop="name" label="姓名" width="90" fixed align="left"></el-table-column>
             <el-table-column prop="workID" label="工号" width="100" align="left"></el-table-column>
@@ -369,39 +370,45 @@ import {deleteRequest, getRequest, postRequest, putRequest} from "../../utils/ap
           }
       },
       methods: {
-          /*清空emp*/
-          /*因为先进入编辑后，emp有数据，然后再进入添加emp需要清除掉信息*/
-          setEmpEmpty(){
-            this.emp = {name: '',
-                        gender: '',
-                        birthday: '',
-                        idCard: '',
-                        wedlock: '',
-                        nationId: '',
-                        nativePlace: '',
-                        politicId: '',
-                        email: '',
-                        phone: '',
-                        address: '',
-                        departmentId: '',
-                        jobLevelId: '',
-                        posId: '',
-                        engageForm: '',
-                        tiptopDegree: '',
-                        specialty: '',
-                        school: '',
-                        beginDate: '',
-                        workState: '在职',
-                        workID: '',
-                        contractTerm: '',
-                        conversionTime: '',
-                        notWorkDate: null,
-                        beginContract: '',
-                        endContract: '',
-                        workAge: '',
-                        salary: null
-            }
-          },
+        /*双击行记录，打开编辑弹框*/
+        tableDbEdit(row, column, cell, event) {
+          this.showEmpEditDialog(row);
+        },
+
+        /*清空emp*/
+        /*因为先进入编辑后，emp有数据，然后再进入添加emp需要清除掉信息*/
+        setEmpEmpty(){
+          this.emp = {
+            name: '',
+            gender: '',
+            birthday: '',
+            idCard: '',
+            wedlock: '',
+            nationId: '',
+            nativePlace: '',
+            politicId: '',
+            email: '',
+            phone: '',
+            address: '',
+            departmentId: '',
+            jobLevelId: '',
+            posId: '',
+            engageForm: '',
+            tiptopDegree: '',
+            specialty: '',
+            school: '',
+            beginDate: '',
+            workState: '在职',
+            workID: '',
+            contractTerm: '',
+            conversionTime: '',
+            notWorkDate: null,
+            beginContract: '',
+            endContract: '',
+            workAge: '',
+            salary: null
+          }
+        },
           /*添加或者修改员工方法*/
           addOrUpdateEmp(){
               if (this.emp.id) {

@@ -1,16 +1,20 @@
 <template>
 <div>
-    <div style="display: flex;justify-content: space-between">
-        <!--输入框、搜索、高级搜索-->
-        <div>
+    <div>
+        <div style="display: flex;justify-content: space-between">
+          <!--输入框、搜索、高级搜索-->
+          <div>
             <el-input placeholder="请输入员工姓名进行搜索..." prefix-icon="el-icon-search" style="width: 300px;margin-right: 10px"
                       v-model="keyword" @keydown.enter.native="initEmps"
                       clearable @clear="initEmps"></el-input>
             <el-button type="primary" icon="el-icon-search" @click="initEmps">搜索</el-button>
-            <el-button type="primary"><i class="fa fa-angle-double-down" style="margin-right: 5px" aria-hidden="true"></i>高级搜索</el-button>
-        </div>
-        <!--导出、导入、添加用户-->
-        <div>
+            <el-button type="primary" @click="advancedisabledView = !advancedisabledView">
+              <i :class="advancedisabledView?'fa fa-angle-double-up':'fa fa-angle-double-down'" aria-hidden="true"></i>
+              高级搜索
+            </el-button>
+          </div>
+          <!--导出、导入、添加用户-->
+          <div>
             <el-button type="success" @click="exportData"><i class="fa fa-arrow-down" style="margin-right: 5px" aria-hidden="true"></i>导出</el-button>
             <el-upload action="/employee/basic/import/emp_info" style="display: inline-flex;margin-left: 8px;margin-right: 8px"
                        :before-upload="beforeUpload"
@@ -20,9 +24,74 @@
                        :disabled="importDataDisabled">
               <el-button type="success" :disabled="importDataDisabled" :icon="importDataBtnIcon">{{importDataBtnText}}</el-button>
             </el-upload>
-
             <el-button type="primary" prefix-icon="el-icon-plus" @click="showEmpAddDialog">添加用户</el-button>
+          </div>
         </div>
+        <!--高级搜索条件框-->
+        <transition name="slide-fade">
+          <div class="advanceCondition" v-show="advancedisabledView">
+            <el-row>
+              <el-col :span="5">政治面貌:
+                <el-select v-model="searchValue.politicId" placeholder="政治面貌" size="mini" style="width: 130px;">
+                  <el-option v-for="item in politicsstatus" :key="item.id" :label="item.name" :value="item.id"></el-option>
+                </el-select>
+              </el-col>
+              <el-col :span="4">民族:
+                <el-select v-model="searchValue.nationId" placeholder="民族" size="mini" style="width: 130px;">
+                  <el-option v-for="item in nations" :key="item.id" :label="item.name" :value="item.id"></el-option>
+                </el-select>
+              </el-col>
+              <el-col :span="4">职位:
+                <el-select v-model="searchValue.posId" placeholder="职位" size="mini" style="width: 130px;">
+                  <el-option v-for="item in positions" :key="item.id" :label="item.name" :value="item.id"></el-option>
+                </el-select>
+              </el-col>
+              <el-col :span="4">职称:
+                <el-select v-model="searchValue.jobLevelId" placeholder="职称" size="mini" style="width: 130px;">
+                  <el-option v-for="item in joblevels" :key="item.id" :label="item.name" :value="item.id"></el-option>
+                </el-select>
+              </el-col>
+              <el-col :span="7">聘用形式:
+                <el-radio-group v-model="searchValue.engageForm">
+                  <el-radio label="劳动合同">劳动合同</el-radio>
+                  <el-radio label="劳务合同">劳务合同</el-radio>
+                </el-radio-group>
+              </el-col>
+            </el-row>
+            <el-row style="margin-top: 10px">
+              <el-col :span="6">所属部门:
+                <el-popover
+                    placement="right"
+                    title="请选择部门"
+                    width="200"
+                    trigger="manual"
+                    v-model="departmentVisable">
+                  <div slot="reference"
+                       style="width: 150px;height: 26px;display: inline-flex;font-size: 13px;border: 1px solid #dedede;border-radius: 5px;
+                                            cursor: pointer;align-items: center;padding-left: 8px;box-sizing: border-box"
+                       @click="showDepView">{{inputDepName}}</div>
+                  <el-tree :data="departmentTree" :props="defaultProps" @node-click="handleNodeClick" default-expand-all></el-tree>
+                </el-popover>
+              </el-col>
+              <el-col :span="9">入职日期:
+                <el-date-picker
+                    v-model="searchValue.beginDateScope"
+                    type="daterange"
+                    size="mini"
+                    unlink-panels
+                    value-format="yyyy-MM-dd"
+                    range-separator="至"
+                    start-placeholder="开始日期"
+                    end-placeholder="结束日期">
+                </el-date-picker>
+              </el-col>
+              <el-col :span="5" :offset="4">
+                <el-button size="mini">取消</el-button>
+                <el-button size="mini" icon="el-icon-search" type="primary" @click="initEmps('advanced')">搜索</el-button>
+              </el-col>
+            </el-row>
+          </div>
+        </transition>
     </div>
     <div style="margin-top: 20px">
         <el-table :data="emps" border style="width: 100%"
@@ -259,6 +328,22 @@ import {deleteRequest, getRequest, postRequest, putRequest} from "../../utils/ap
       name: "EmpBasic",
       data() {
           return {
+              /*高级搜索条件对象*/
+              searchValue: {
+                politicId: null,
+                nationId: null,
+                jobLevelId: null,
+                posId: null,
+                engageForm: null,
+                departmentId: null,
+                beginDateScope: null
+              },
+              /*是否展示高级搜索框*/
+              advancedisabledView: false,
+              showDepView2() {
+                this.popVisible2 = !this.popVisible2
+              },
+
               /*导入数据*/
               importDataBtnIcon: 'el-icon-upload2',
               importDataBtnText: '导入',
@@ -614,6 +699,29 @@ import {deleteRequest, getRequest, postRequest, putRequest} from "../../utils/ap
     }
 </script>
 
-<style scoped>
+<style>
+  /*高级搜索条件框*/
+  .advanceCondition {
+      border: 2px solid #4156c2;
+      border-radius: 5px;
+      box-sizing: border-box;
+      padding: 5px 10px;
+      margin-top: 8px;
+  }
+  /* 可以设置不同的进入和离开动画 */
+  /* 设置持续时间和动画函数 */
+  .slide-fade-enter-active {
+    transition: all .8s ease;
+  }
 
+  .slide-fade-leave-active {
+    transition: all .8s cubic-bezier(1.0, 0.5, 0.8, 1.0);
+  }
+
+  .slide-fade-enter, .slide-fade-leave-to
+    /* .slide-fade-leave-active for below version 2.1.8 */
+  {
+    transform: translateX(10px);
+    opacity: 0;
+  }
 </style>

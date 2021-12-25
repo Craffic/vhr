@@ -32,7 +32,6 @@ public class JobLevel implements Serializable {
     }
 
     public JobLevel(String name) {
-
         this.name = name;
     }
 

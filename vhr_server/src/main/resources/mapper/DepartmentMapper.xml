@@ -16,6 +16,10 @@
                     select="com.craffic.vhr.server.dao.DepartmentMapper.getAllDepartmentsByParentId" column="id"/>
     </resultMap>
 
+    <sql id="Base_Column_List">
+        id, name, parentId, depPath, enabled, isParent
+    </sql>
+
     <select id="getAllDepartmentsByParentId" resultMap="DepartmentWithChildren">
         select * from department where parentId=#{parentId}
     </select>
@@ -28,5 +32,11 @@
     <!--调用存储过程删除部门-->
     <select id="deleteDepById" statementType="CALLABLE">
         call deleteDep(#{id,mode=IN,jdbcType=INTEGER},#{result,mode=OUT,jdbcType=INTEGER})
+    </select>
+
+    <select id="getAllDepartmentsWithOutChildren" resultMap="BaseResultMap">
+        select
+            <include refid="Base_Column_List"></include>
+        from department;
     </select>
 </mapper>

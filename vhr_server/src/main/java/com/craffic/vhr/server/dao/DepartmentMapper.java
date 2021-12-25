@@ -1,6 +1,7 @@
 package com.craffic.vhr.server.dao;
 
 import com.craffic.vhr.server.domain.Department;
+import com.craffic.vhr.server.domain.Employee;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 
@@ -16,4 +17,6 @@ public interface DepartmentMapper {
     void addDept(Department department);
 
     void deleteDepById(Department dep);
+
+    List<Department> getAllDepartmentsWithOutChildren();
 }

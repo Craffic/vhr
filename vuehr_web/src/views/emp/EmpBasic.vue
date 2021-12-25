@@ -397,12 +397,17 @@ import {deleteRequest, getRequest, postRequest, putRequest} from "../../utils/ap
           this.importDataBtnText = '导入';
           this.importDataBtnIcon = 'el-icon-upload2';
           this.importDataDisabled = false;
+          this.$message({
+            message: '员工信息表导入成功！',
+            type: 'success'
+          });
           this.initEmps();
         },
         onError(err, file, fileList) {
           this.importDataBtnText = '导入';
           this.importDataBtnIcon = 'el-icon-upload2';
           this.importDataDisabled = false;
+          this.$message.error('员工信息表导入失败！');
         },
         /*导出员工数据*/
         exportData() {

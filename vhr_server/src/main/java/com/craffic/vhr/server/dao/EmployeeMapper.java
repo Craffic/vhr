@@ -21,4 +21,6 @@ public interface EmployeeMapper {
     Integer maxWorkID();
 
     int updateByPrimaryKeySelective(Employee record);
+
+    Integer addEmps(@Param("list") List<Employee> list);
 }

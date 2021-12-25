@@ -131,10 +131,13 @@ public class EmpBasicController {
         return POIUtils.exportEmpData(employeeList);
     }
 
+    /**
+     * 导入员工信息
+     */
     @PostMapping("/import/emp_info")
     public RespBean importData(MultipartFile file) throws IOException {
-        file.transferTo(new File("E:\\test.xls"));
-        if (true) {
+        List<Employee> list = POIUtils.excel2Employee(file, nationService.getAllNations(), politicsstatusService.getAllPoliticsstatus(), departmentService.getAllDepartmentsWithOutChildren(), positionService.getAllPositions(), jobLevelService.getAllJobLevels());
+        if (employeeService.addEmps(list) == list.size()) {
             return RespBean.ok("上传成功");
         }
         return RespBean.error("上传失败");

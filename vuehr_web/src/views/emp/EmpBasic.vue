@@ -65,12 +65,10 @@
                     title="请选择部门"
                     width="200"
                     trigger="manual"
-                    v-model="departmentVisable">
-                  <div slot="reference"
-                       style="width: 150px;height: 26px;display: inline-flex;font-size: 13px;border: 1px solid #dedede;border-radius: 5px;
-                                            cursor: pointer;align-items: center;padding-left: 8px;box-sizing: border-box"
-                       @click="showDepView">{{inputDepName}}</div>
-                  <el-tree :data="departmentTree" :props="defaultProps" @node-click="handleNodeClick" default-expand-all></el-tree>
+                    v-model="advDeptPopVisable">
+                  <el-tree :data="departmentTree" :props="defaultProps" @node-click="advHandleNodeClick" default-expand-all></el-tree>
+                  <div slot="reference" style="width: 150px;height: 26px;display: inline-flex;font-size: 13px;border: 1px solid #dedede;border-radius: 5px;
+                                            cursor: pointer;align-items: center;padding-left: 8px;box-sizing: border-box" @click="advshowDepTree">{{inputDepName}}</div>
                 </el-popover>
               </el-col>
               <el-col :span="9">入职日期:
@@ -328,7 +326,7 @@ import {deleteRequest, getRequest, postRequest, putRequest} from "../../utils/ap
       name: "EmpBasic",
       data() {
           return {
-              /*高级搜索条件对象*/
+              /*定义一个高级搜索条件对象*/
               searchValue: {
                 politicId: null,
                 nationId: null,
@@ -340,9 +338,6 @@ import {deleteRequest, getRequest, postRequest, putRequest} from "../../utils/ap
               },
               /*是否展示高级搜索框*/
               advancedisabledView: false,
-              showDepView2() {
-                this.popVisible2 = !this.popVisible2
-              },
 
               /*导入数据*/
               importDataBtnIcon: 'el-icon-upload2',
@@ -354,7 +349,7 @@ import {deleteRequest, getRequest, postRequest, putRequest} from "../../utils/ap
               /*部门树结构体*/
               departmentTree:[],
               /*选中后的部门名称*/
-              inputDepName: '',
+              inputDepName: '所属部门',
               loading: false,
               total: 0,
               page:1,
@@ -427,6 +422,8 @@ import {deleteRequest, getRequest, postRequest, putRequest} from "../../utils/ap
             },
               /*添加页面 - 部门树弹框*/
               departmentVisable: false,
+              /*高级搜索 - 部门树弹框开关*/
+              advDeptPopVisable: false,
               defaultProps: {
                   children: 'children',
                   label: 'name'
@@ -472,6 +469,17 @@ import {deleteRequest, getRequest, postRequest, putRequest} from "../../utils/ap
           }
       },
       methods: {
+        /*高级搜索 - 弹出部门树pop弹框*/
+        advshowDepTree(){
+          this.advDeptPopVisable = !this.advDeptPopVisable;
+        },
+        /*高级搜索 - 点击部门树方法*/
+        advHandleNodeClick(data){
+          // 给所属部门赋值
+          this.inputDepName = data.name;
+          this.searchValue.departmentId = data.id;
+          this.advDeptPopVisable = !this.advDeptPopVisable;
+        },
         /*上传文件前的钩子函数*/
         beforeUpload() {
           this.importDataBtnText = '正在导入';
@@ -624,15 +632,31 @@ import {deleteRequest, getRequest, postRequest, putRequest} from "../../utils/ap
               this.size = currentSize;
               this.initEmps();
           },
-          initEmps() {
-              this.loading = true;
-              getRequest('/employee/basic/?page=' + this.page + '&size=' + this.size + '&keyword=' + this.keyword).then(resp => {
-                  this.loading = false;
-                  if (resp) {
-                      this.emps = resp.data;
-                      this.total = resp.total;
-                  }
-              })
+          /*普通搜索或者高级搜索：通过type来区分*/
+          initEmps(type) {
+            this.loading = true;
+            let url = '/employee/basic/?page=' + this.page + '&size=' + this.size;
+            if (type && type == 'advanced') {
+              // 高级搜索
+              url += '&politicId=' + this.searchValue.politicId +
+                     '&nationId=' + this.searchValue.nationId +
+                     '&jobLevelId=' + this.searchValue.jobLevelId +
+                     '&posId=' + this.searchValue.posId +
+                     '&engageForm=' + this.searchValue.engageForm +
+                     '&departmentId=' + this.searchValue.departmentId +
+                     '&beginDateScope=' + this.searchValue.beginDateScope;
+            } else {
+              // 普通搜索
+              url += '&name=' + this.keyword;
+            }
+            console.log(url);
+            getRequest(url).then(resp => {
+              this.loading = false;
+              if (resp) {
+                this.emps = resp.data;
+                this.total = resp.total;
+              }
+            })
           },
           /*弹出添加用户对话框*/
           showEmpAddDialog() {
@@ -695,6 +719,8 @@ import {deleteRequest, getRequest, postRequest, putRequest} from "../../utils/ap
           this.initSelectionData();
           /*打开弹框就显示工号*/
           this.generateWorkID();
+          /*初始化职位*/
+          this.initPositions();
       }
     }
 </script>

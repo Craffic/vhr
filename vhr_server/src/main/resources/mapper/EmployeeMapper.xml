@@ -84,9 +84,6 @@
     <if test="beginDateScope !=null">
       and e.beginDate between #{beginDateScope[0]} and #{beginDateScope[1]}
     </if>
-    <if test="keyword != null and keyword != ''">
-      and e.name like concat('%', #{keyword}, '%')
-    </if>
     <if test="page !=null and size!=null">
       limit #{page},#{size}
     </if>
@@ -120,9 +117,6 @@
       </if>
       <if test="beginDateScope !=null">
         and e.beginDate between #{beginDateScope[0]} and #{beginDateScope[1]}
-      </if>
-      <if test="keyword != null and keyword != ''">
-        and e.name like concat('%', #{keyword}, '%')
       </if>
     </where>
   </select>

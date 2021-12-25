@@ -12,9 +12,9 @@ public interface EmployeeMapper {
 
     int deleteByPrimaryKey(Integer id);
 
-    List<Employee> getEmployeeByPage(@Param("page") Integer page, @Param("size") Integer size, @Param("keyword") String keyword, @Param("emp") Employee employee, @Param("beginDateScope") Date[] beginDateScope);
+    List<Employee> getEmployeeByPage(@Param("page") Integer page, @Param("size") Integer size, @Param("emp") Employee employee, @Param("beginDateScope") Date[] beginDateScope);
 
-    Long getTotal(@Param("keyword") String keyword, @Param("emp") Employee employee,@Param("beginDateScope") Date[] beginDateScope);
+    Long getTotal(@Param("emp") Employee employee,@Param("beginDateScope") Date[] beginDateScope);
 
     int insertSelective(Employee record);
 

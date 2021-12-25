@@ -5,9 +5,9 @@
           <!--输入框、搜索、高级搜索-->
           <div>
             <el-input placeholder="请输入员工姓名进行搜索..." prefix-icon="el-icon-search" style="width: 300px;margin-right: 10px"
-                      v-model="keyword" @keydown.enter.native="initEmps"
+                      v-model="keyword" @keydown.enter.native="initEmps" :disabled="advancedisabledView"
                       clearable @clear="initEmps"></el-input>
-            <el-button type="primary" icon="el-icon-search" @click="initEmps">搜索</el-button>
+            <el-button type="primary" icon="el-icon-search" @click="initEmps" :disabled="advancedisabledView">搜索</el-button>
             <el-button type="primary" @click="advancedisabledView = !advancedisabledView">
               <i :class="advancedisabledView?'fa fa-angle-double-up':'fa fa-angle-double-down'" aria-hidden="true"></i>
               高级搜索

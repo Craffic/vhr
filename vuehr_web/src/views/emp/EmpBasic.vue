@@ -11,8 +11,8 @@
         </div>
         <!--导出、导入、添加用户-->
         <div>
-            <el-button type="success"><i class="fa fa-arrow-down" style="margin-right: 5px" aria-hidden="true"></i>导出数据</el-button>
-            <el-button type="success"><i class="fa fa-arrow-up" style="margin-right: 5px" aria-hidden="true"></i>导入数据</el-button>
+            <el-button type="success" @click="exportData"><i class="fa fa-arrow-down" style="margin-right: 5px" aria-hidden="true"></i>导出</el-button>
+            <el-button type="success"><i class="fa fa-arrow-up" style="margin-right: 5px" aria-hidden="true"></i>导入</el-button>
             <el-button type="primary" prefix-icon="el-icon-plus" @click="showEmpAddDialog">添加用户</el-button>
         </div>
     </div>
@@ -26,6 +26,7 @@
             <el-table-column type="selection" width="55"></el-table-column>
             <el-table-column prop="name" label="姓名" width="90" fixed align="left"></el-table-column>
             <el-table-column prop="workID" label="工号" width="100" align="left"></el-table-column>
+            <el-table-column prop="gender" label="性别" width="60" align="left"></el-table-column>
             <el-table-column prop="birthday" label="出生日期" width="100"></el-table-column>
             <el-table-column prop="idCard" label="身份证号码" width="180"></el-table-column>
             <el-table-column prop="wedlock" label="婚姻状况"></el-table-column>
@@ -37,10 +38,14 @@
             <el-table-column prop="address" label="联系地址" width="300"></el-table-column>
             <el-table-column prop="department.name" label="所属部门" width="90"></el-table-column>
             <el-table-column prop="position.name" label="职位" width="120"></el-table-column>
-            <el-table-column prop="jobLevel.name" label="职称"  width="120"></el-table-column>
+            <el-table-column prop="jobLevel.name" label="职称"  width="140"></el-table-column>
             <el-table-column prop="engageForm" label="聘用形式" width="90"></el-table-column>
+            <el-table-column prop="tiptopDegree" label="最高学历" width="90"></el-table-column>
+            <el-table-column prop="specialty" label="专业" width="120"></el-table-column>
+            <el-table-column prop="school" label="毕业院校" width="140"></el-table-column>
             <el-table-column prop="beginDate" label="入职日期" width="120"></el-table-column>
             <el-table-column prop="conversionTime" label="转正日期" width="120"></el-table-column>
+            <el-table-column prop="workState" label="在职状态" width="120"></el-table-column>
             <el-table-column prop="beginContract" label="合同起始日期" width="120"></el-table-column>
             <el-table-column prop="endContract" label="合同终止日期" width="120"></el-table-column>
             <el-table-column prop="contractTerm" label="合同期限"  width="100">
@@ -370,6 +375,10 @@ import {deleteRequest, getRequest, postRequest, putRequest} from "../../utils/ap
           }
       },
       methods: {
+        /*导出员工数据*/
+        exportData() {
+          window.open('/employee/basic/export/emp_info', '_parent');
+        },
         /*双击行记录，打开编辑弹框*/
         tableDbEdit(row, column, cell, event) {
           this.showEmpEditDialog(row);

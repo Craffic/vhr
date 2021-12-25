@@ -4,7 +4,9 @@ import com.craffic.vhr.server.common.RespBean;
 import com.craffic.vhr.server.common.RespPageBean;
 import com.craffic.vhr.server.domain.*;
 import com.craffic.vhr.server.service.*;
+import com.craffic.vhr.server.util.POIUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Date;
@@ -117,4 +119,12 @@ public class EmpBasicController {
         return RespBean.error("更新失败!");
     }
 
+    /**
+     * 到处员工信息到excel表
+     */
+    @GetMapping("/export/emp_info")
+    public ResponseEntity<byte[]> exportEmpsData(){
+        List<Employee> employeeList = (List<Employee>) employeeService.getEmployeeByPage(null, null, null, new Employee(), null).getData();
+        return POIUtils.exportEmpData(employeeList);
+    }
 }

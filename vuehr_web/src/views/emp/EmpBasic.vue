@@ -13,12 +13,11 @@
         <div>
             <el-button type="success"><i class="fa fa-arrow-down" style="margin-right: 5px" aria-hidden="true"></i>导出数据</el-button>
             <el-button type="success"><i class="fa fa-arrow-up" style="margin-right: 5px" aria-hidden="true"></i>导入数据</el-button>
-            <el-button type="primary" prefix-icon="el-icon-plus" @click="showEmpDialog">添加用户</el-button>
+            <el-button type="primary" prefix-icon="el-icon-plus" @click="showEmpAddDialog">添加用户</el-button>
         </div>
     </div>
     <div style="margin-top: 20px">
         <el-table :data="emps" border style="width: 100%"
-                  @cell-dblclick="showEmpDialog"
                   v-loading="loading"
                   element-loading-text="正在加载..."
                   element-loading-spinner="el-icon-loading"
@@ -51,7 +50,7 @@
             <el-table-column prop="tiptopDegree" label="最高学历" width="100"></el-table-column>
             <el-table-column prop="idCard" label="操作" fixed="right" width="300">
                 <template slot-scope="scope">
-                    <el-button size="mini">编辑</el-button>
+                    <el-button size="mini" @click="showEmpEditDialog(scope.row)">编辑</el-button>
                     <el-button size="mini" type="primary">查看高级资料</el-button>
                     <el-button size="mini" type="danger" @click="deleteEmp(scope.row)">删除</el-button>
                 </template>
@@ -68,7 +67,7 @@
         </div>
     </div>
     <!--添加用户对话框-->
-    <el-dialog title="添加用户" :visible.sync="empDialogVisible" width="60%">
+    <el-dialog :title="title" :visible.sync="empDialogVisible" width="60%">
         <div>
             <el-form :rules="rules" :model="emp" ref="empForm">
                 <el-row>
@@ -232,20 +231,22 @@
             </el-form>
         </div>
         <span slot="footer" class="dialog-footer">
-            <el-button @click="dialogVisible = false">取 消</el-button>
-            <el-button type="primary" @click="addEmp">确 定</el-button>
+            <el-button @click="empDialogVisible = false">取 消</el-button>
+            <el-button type="primary" @click="addOrUpdateEmp">确 定</el-button>
         </span>
     </el-dialog>
 </div>
 </template>
 
 <script>
-import {deleteRequest, getRequest, postRequest} from "../../utils/api";
+import {deleteRequest, getRequest, postRequest, putRequest} from "../../utils/api";
 
     export default {
       name: "EmpBasic",
       data() {
           return {
+              /*添加或修改弹窗标题*/
+              title: '',
               emps: [],
               /*部门树结构体*/
               departmentTree:[],
@@ -368,8 +369,55 @@ import {deleteRequest, getRequest, postRequest} from "../../utils/api";
           }
       },
       methods: {
-          /*添加员工方法*/
-          addEmp(){
+          /*清空emp*/
+          /*因为先进入编辑后，emp有数据，然后再进入添加emp需要清除掉信息*/
+          setEmpEmpty(){
+            this.emp = {name: '',
+                        gender: '',
+                        birthday: '',
+                        idCard: '',
+                        wedlock: '',
+                        nationId: '',
+                        nativePlace: '',
+                        politicId: '',
+                        email: '',
+                        phone: '',
+                        address: '',
+                        departmentId: '',
+                        jobLevelId: '',
+                        posId: '',
+                        engageForm: '',
+                        tiptopDegree: '',
+                        specialty: '',
+                        school: '',
+                        beginDate: '',
+                        workState: '在职',
+                        workID: '',
+                        contractTerm: '',
+                        conversionTime: '',
+                        notWorkDate: null,
+                        beginContract: '',
+                        endContract: '',
+                        workAge: '',
+                        salary: null
+            }
+          },
+          /*添加或者修改员工方法*/
+          addOrUpdateEmp(){
+              if (this.emp.id) {
+                // 有id就是修改
+                this.$refs.empForm.validate((valid) => {
+                  if (valid) {
+                    putRequest('/employee/basic/', this.emp).then(resp => {
+                      if (resp) {
+                        this.empDialogVisible = false;
+                        this.initEmps();
+                      }
+                    })
+                  }
+                })
+              } else {
+                // 无id就是新增
               this.$refs.empForm.validate((valid) => {
                 if (valid) {
                   postRequest('/employee/basic/', this.emp).then(resp => {
@@ -380,6 +428,7 @@ import {deleteRequest, getRequest, postRequest} from "../../utils/api";
                   })
                 }
               })
+            }
           },
           /*添加员工 - 加载下拉框数据*/
           initSelectionData(){
@@ -451,9 +500,22 @@ import {deleteRequest, getRequest, postRequest} from "../../utils/api";
               })
           },
           /*弹出添加用户对话框*/
-          showEmpDialog() {
+          showEmpAddDialog() {
+              /*添加之前要清空emp对象*/
+              this.setEmpEmpty();
+              this.initPositions();
+              this.title = '添加员工';
               this.empDialogVisible = true;
               this.initPositions();
+              this.inputDepName = '';
+          },
+          /*弹出修改员工对话框*/
+          showEmpEditDialog(data) {
+              this.title = '修改员工信息';
+              this.initPositions();
+              this.empDialogVisible = true;
+              this.emp = data;
+              this.inputDepName = data.department.name;
           },
           /*生成工号*/
           generateWorkID(){

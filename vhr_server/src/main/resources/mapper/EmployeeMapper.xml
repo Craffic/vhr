@@ -312,4 +312,92 @@
     delete from employee
     where id = #{id,jdbcType=INTEGER}
   </delete>
+
+  <update id="updateByPrimaryKeySelective" parameterType="com.craffic.vhr.server.domain.Employee">
+    update employee
+    <set>
+      <if test="name != null">
+        name = #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="gender != null">
+        gender = #{gender,jdbcType=CHAR},
+      </if>
+      <if test="birthday != null">
+        birthday = #{birthday,jdbcType=DATE},
+      </if>
+      <if test="idCard != null">
+        idCard = #{idCard,jdbcType=CHAR},
+      </if>
+      <if test="wedlock != null">
+        wedlock = #{wedlock,jdbcType=CHAR},
+      </if>
+      <if test="nationId != null">
+        nationId = #{nationId,jdbcType=INTEGER},
+      </if>
+      <if test="nativePlace != null">
+        nativePlace = #{nativePlace,jdbcType=VARCHAR},
+      </if>
+      <if test="politicId != null">
+        politicId = #{politicId,jdbcType=INTEGER},
+      </if>
+      <if test="email != null">
+        email = #{email,jdbcType=VARCHAR},
+      </if>
+      <if test="phone != null">
+        phone = #{phone,jdbcType=VARCHAR},
+      </if>
+      <if test="address != null">
+        address = #{address,jdbcType=VARCHAR},
+      </if>
+      <if test="departmentId != null">
+        departmentId = #{departmentId,jdbcType=INTEGER},
+      </if>
+      <if test="jobLevelId != null">
+        jobLevelId = #{jobLevelId,jdbcType=INTEGER},
+      </if>
+      <if test="posId != null">
+        posId = #{posId,jdbcType=INTEGER},
+      </if>
+      <if test="engageForm != null">
+        engageForm = #{engageForm,jdbcType=VARCHAR},
+      </if>
+      <if test="tiptopDegree != null">
+        tiptopDegree = #{tiptopDegree,jdbcType=CHAR},
+      </if>
+      <if test="specialty != null">
+        specialty = #{specialty,jdbcType=VARCHAR},
+      </if>
+      <if test="school != null">
+        school = #{school,jdbcType=VARCHAR},
+      </if>
+      <if test="beginDate != null">
+        beginDate = #{beginDate,jdbcType=DATE},
+      </if>
+      <if test="workState != null">
+        workState = #{workState,jdbcType=CHAR},
+      </if>
+      <if test="workID != null">
+        workID = #{workID,jdbcType=CHAR},
+      </if>
+      <if test="contractTerm != null">
+        contractTerm = #{contractTerm,jdbcType=DOUBLE},
+      </if>
+      <if test="conversionTime != null">
+        conversionTime = #{conversionTime,jdbcType=DATE},
+      </if>
+      <if test="notWorkDate != null">
+        notWorkDate = #{notWorkDate,jdbcType=DATE},
+      </if>
+      <if test="beginContract != null">
+        beginContract = #{beginContract,jdbcType=DATE},
+      </if>
+      <if test="endContract != null">
+        endContract = #{endContract,jdbcType=DATE},
+      </if>
+      <if test="workAge != null">
+        workAge = #{workAge,jdbcType=INTEGER},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
 </mapper>

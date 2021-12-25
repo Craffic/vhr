@@ -19,4 +19,6 @@ public interface EmployeeMapper {
     int insertSelective(Employee record);
 
     Integer maxWorkID();
+
+    int updateByPrimaryKeySelective(Employee record);
 }

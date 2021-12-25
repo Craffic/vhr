@@ -31,7 +31,7 @@
             <el-table-column prop="wedlock" label="婚姻状况"></el-table-column>
             <el-table-column prop="nation.name" label="民族"></el-table-column>
             <el-table-column prop="nativePlace" label="籍贯"></el-table-column>
-            <el-table-column prop="politicId" label="政治面貌"></el-table-column>
+            <el-table-column prop="politicsstatus.name" label="政治面貌"></el-table-column>
             <el-table-column prop="email" label="电子邮箱" width="180"></el-table-column>
             <el-table-column prop="phone" label="电话号码" width="120"></el-table-column>
             <el-table-column prop="address" label="联系地址" width="300"></el-table-column>

@@ -6,6 +6,8 @@ import com.craffic.vhr.server.domain.Employee;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.text.DecimalFormat;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 
@@ -14,6 +16,11 @@ public class EmployeeService {
 
     @Autowired
     private EmployeeMapper employeeMapper;
+
+    // 计算合同期限
+    SimpleDateFormat yearFormat = new SimpleDateFormat("yyyy");
+    SimpleDateFormat monthFormat = new SimpleDateFormat("MM");
+    DecimalFormat decimalFormat = new DecimalFormat("##.00");
 
     /**
      * 分页查询员工
@@ -31,6 +38,14 @@ public class EmployeeService {
     }
 
     public Integer addEmp(Employee employee) {
+        // 计算合同期限
+        Date beginContract = employee.getBeginContract();
+        Date endContract = employee.getEndContract();
+        double diffYear = Double.parseDouble(yearFormat.format(endContract)) - Double.parseDouble(yearFormat.format(beginContract));
+        double diffMouth = Double.parseDouble(monthFormat.format(endContract)) - Double.parseDouble(monthFormat.format(beginContract));
+        double month = (diffYear) * 12 + (diffMouth);
+        employee.setContractTerm(Double.parseDouble(decimalFormat.format(month / 12)));
+
         return employeeMapper.insertSelective(employee);
     }
 

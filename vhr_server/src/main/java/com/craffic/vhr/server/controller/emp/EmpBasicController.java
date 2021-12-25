@@ -8,7 +8,10 @@ import com.craffic.vhr.server.util.POIUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.File;
+import java.io.IOException;
 import java.util.Date;
 import java.util.List;
 
@@ -126,5 +129,14 @@ public class EmpBasicController {
     public ResponseEntity<byte[]> exportEmpsData(){
         List<Employee> employeeList = (List<Employee>) employeeService.getEmployeeByPage(null, null, null, new Employee(), null).getData();
         return POIUtils.exportEmpData(employeeList);
+    }
+
+    @PostMapping("/import/emp_info")
+    public RespBean importData(MultipartFile file) throws IOException {
+        file.transferTo(new File("E:\\test.xls"));
+        if (true) {
+            return RespBean.ok("上传成功");
+        }
+        return RespBean.error("上传失败");
     }
 }

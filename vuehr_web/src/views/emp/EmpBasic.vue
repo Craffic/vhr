@@ -12,7 +12,15 @@
         <!--导出、导入、添加用户-->
         <div>
             <el-button type="success" @click="exportData"><i class="fa fa-arrow-down" style="margin-right: 5px" aria-hidden="true"></i>导出</el-button>
-            <el-button type="success"><i class="fa fa-arrow-up" style="margin-right: 5px" aria-hidden="true"></i>导入</el-button>
+            <el-upload action="/employee/basic/import/emp_info" style="display: inline-flex;margin-left: 8px;margin-right: 8px"
+                       :before-upload="beforeUpload"
+                       :on-success="onSuccess"
+                       :on-error="onError"
+                       :show-file-list="false"
+                       :disabled="importDataDisabled">
+              <el-button type="success" :disabled="importDataDisabled" :icon="importDataBtnIcon">{{importDataBtnText}}</el-button>
+            </el-upload>
+
             <el-button type="primary" prefix-icon="el-icon-plus" @click="showEmpAddDialog">添加用户</el-button>
         </div>
     </div>
@@ -251,6 +259,10 @@ import {deleteRequest, getRequest, postRequest, putRequest} from "../../utils/ap
       name: "EmpBasic",
       data() {
           return {
+              /*导入数据*/
+              importDataBtnIcon: 'el-icon-upload2',
+              importDataBtnText: '导入',
+              importDataDisabled: false,
               /*添加或修改弹窗标题*/
               title: '',
               emps: [],
@@ -375,6 +387,23 @@ import {deleteRequest, getRequest, postRequest, putRequest} from "../../utils/ap
           }
       },
       methods: {
+        /*上传文件前的钩子函数*/
+        beforeUpload() {
+          this.importDataBtnText = '正在导入';
+          this.importDataBtnIcon = 'el-icon-loading';
+          this.importDataDisabled = true;
+        },
+        onSuccess(response, file, fileList) {
+          this.importDataBtnText = '导入';
+          this.importDataBtnIcon = 'el-icon-upload2';
+          this.importDataDisabled = false;
+          this.initEmps();
+        },
+        onError(err, file, fileList) {
+          this.importDataBtnText = '导入';
+          this.importDataBtnIcon = 'el-icon-upload2';
+          this.importDataDisabled = false;
+        },
         /*导出员工数据*/
         exportData() {
           window.open('/employee/basic/export/emp_info', '_parent');

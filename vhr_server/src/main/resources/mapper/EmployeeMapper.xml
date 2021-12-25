@@ -307,4 +307,9 @@
   <select id="maxWorkID" resultType="java.lang.Integer">
     select max(workID) from employee
   </select>
+
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from employee
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
 </mapper>

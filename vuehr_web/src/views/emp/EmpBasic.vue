@@ -53,7 +53,7 @@
                 <template slot-scope="scope">
                     <el-button size="mini">编辑</el-button>
                     <el-button size="mini" type="primary">查看高级资料</el-button>
-                    <el-button size="mini" type="danger">删除</el-button>
+                    <el-button size="mini" type="danger" @click="deleteEmp(scope.row)">删除</el-button>
                 </template>
             </el-table-column>
         </el-table>
@@ -240,7 +240,7 @@
 </template>
 
 <script>
-    import {getRequest, postRequest} from "../../utils/api";
+import {deleteRequest, getRequest, postRequest} from "../../utils/api";
 
     export default {
       name: "EmpBasic",
@@ -372,7 +372,7 @@
           addEmp(){
               this.$refs.empForm.validate((valid) => {
                 if (valid) {
-                  postRequest('/emp/basic/', this.emp).then(resp => {
+                  postRequest('/employee/basic/', this.emp).then(resp => {
                     if (resp) {
                       this.empDialogVisible = false;
                       this.initEmps();
@@ -385,7 +385,7 @@
           initSelectionData(){
               // 从sessionStorage里拿下拉框数据，如果从sessionStorage里拿不到数据，则重新调用接口获取数据
               if (!window.sessionStorage.getItem("nations")) {
-                  getRequest('/emp/basic/nations').then(resp => {
+                  getRequest('/employee/basic/nations').then(resp => {
                       if (resp) {
                           this.nations = resp;
                       }
@@ -395,7 +395,7 @@
                   this.nations = JSON.parse(window.sessionStorage.getItem("nations"));
               }
               if (!window.sessionStorage.getItem("politicsstatus")) {
-                  getRequest('/emp/basic/politicsstatus').then(resp => {
+                  getRequest('/employee/basic/politicsstatus').then(resp => {
                       if (resp) {
                           this.politicsstatus = resp;
                       }
@@ -404,7 +404,7 @@
                   this.politicsstatus = JSON.parse(window.sessionStorage.getItem("politicsstatus"));
               }
               if (!window.sessionStorage.getItem("joblevels")) {
-                  getRequest('/emp/basic/joblevels').then(resp => {
+                  getRequest('/employee/basic/joblevels').then(resp => {
                       if (resp) {
                           this.joblevels = resp;
                       }
@@ -413,7 +413,7 @@
                   this.joblevels = JSON.parse(window.sessionStorage.getItem("joblevels"));
               }
               if (!window.sessionStorage.getItem("deps")) {
-                  getRequest('/emp/basic/deps').then(resp => {
+                  getRequest('/employee/basic/deps').then(resp => {
                       if (resp) {
                           this.departmentTree = resp;
                       }
@@ -424,7 +424,7 @@
           },
           /*初始化职位下拉框数据，在弹出添加对话框时调用*/
           initPositions(){
-              getRequest('/emp/basic/positions').then(resp => {
+              getRequest('/employee/basic/positions').then(resp => {
                   if (resp) {
                       this.positions = resp;
                   }
@@ -442,7 +442,7 @@
           },
           initEmps() {
               this.loading = true;
-              getRequest('/emp/basic/?page=' + this.page + '&size=' + this.size + '&keyword=' + this.keyword).then(resp => {
+              getRequest('/employee/basic/?page=' + this.page + '&size=' + this.size + '&keyword=' + this.keyword).then(resp => {
                   this.loading = false;
                   if (resp) {
                       this.emps = resp.data;
@@ -457,7 +457,7 @@
           },
           /*生成工号*/
           generateWorkID(){
-              getRequest('/emp/basic/maxWorkID').then(resp => {
+              getRequest('/employee/basic/maxWorkID').then(resp => {
                   this.loading = false;
                   if (resp) {
                       this.emp.workID = resp.obj;
@@ -473,6 +473,23 @@
               this.inputDepName = data.name;
               this.emp.departmentId = data.id;
               this.departmentVisable = !this.departmentVisable;
+          },
+          /*删除员工*/
+          deleteEmp(data){
+            this.$confirm('此操作将永久删除【' +data.name+ '】员工, 是否继续?', '提示', {
+              confirmButtonText: '确定',
+              cancelButtonText: '取消',
+              type: 'warning'
+            }).then(() => {
+              deleteRequest('/employee/basic/' + data.id).then(resp => {
+                this.initEmps();
+              })
+            }).catch(() => {
+              this.$message({
+                type: 'info',
+                message: '已取消删除'
+              });
+            });
           }
       },
       mounted() {

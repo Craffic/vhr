@@ -30,7 +30,7 @@
         <!--高级搜索条件框-->
         <transition name="slide-fade">
           <div class="advanceCondition" v-show="advancedisabledView">
-            <el-row>
+            <el-row style="margin-top: 10px">
               <el-col :span="5">政治面貌:
                 <el-select v-model="searchValue.politicId" placeholder="政治面貌" size="mini" style="width: 130px;">
                   <el-option v-for="item in politicsstatus" :key="item.id" :label="item.name" :value="item.id"></el-option>
@@ -68,8 +68,10 @@
                     v-model="advDeptPopVisable">
                   <el-tree :data="departmentTree" :props="defaultProps" @node-click="advHandleNodeClick" default-expand-all></el-tree>
                   <div slot="reference" style="width: 150px;height: 26px;display: inline-flex;font-size: 13px;border: 1px solid #dedede;border-radius: 5px;
-                                            cursor: pointer;align-items: center;padding-left: 8px;box-sizing: border-box" @click="advshowDepTree">{{inputDepName}}</div>
+                                            cursor: pointer;align-items: center;padding-left: 8px;box-sizing: border-box" @click="advshowDepTree">{{inputDepName}}
+                  </div>
                 </el-popover>
+                <el-button type="text" style="color: red; margin-left: 5px" icon="el-icon-delete" @click="clearSelectDept"></el-button>
               </el-col>
               <el-col :span="9">入职日期:
                 <el-date-picker
@@ -84,7 +86,7 @@
                 </el-date-picker>
               </el-col>
               <el-col :span="5" :offset="4">
-                <el-button size="mini">取消</el-button>
+                <el-button size="mini" @click="resetCondition">重置条件</el-button>
                 <el-button size="mini" icon="el-icon-search" type="primary" @click="initEmps('advanced')">搜索</el-button>
               </el-col>
             </el-row>
@@ -362,64 +364,64 @@ import {deleteRequest, getRequest, postRequest, putRequest} from "../../utils/ap
               joblevels: [],
               positions: [],
               tiptopDegree: ['博士后', '博士', '研究生', '本科', '大专', '高中', '中专', '初中', '小学', '其他'],
-              // emp:{name: "姚森",
-              //      gender: "男",
-              //      birthday: "1991-02-05",
-              //      idCard: "610122199102058952",
-              //      wedlock: "已婚",
-              //      nationId: 1,
-              //      nativePlace: "河南",
-              //      politicId: 3,
-              //      email: "yaosen@qq.com",
-              //      phone: "14785559936",
-              //      address: "河南洛阳人民大道58号",
-              //      departmentId: 92,
-              //      jobLevelId: 15,
-              //      posId: 34,
-              //      engageForm: "劳动合同",
-              //      tiptopDegree: "硕士",
-              //      specialty: "室内装修设计",
-              //      school: "西北大学",
-              //      beginDate: "2017-01-02",
-              //      workState: "在职",
-              //      workID: '',
-              //      contractTerm: 7,
-              //      conversionTime: "2017-04-02",
-              //      notWorkDate: null,
-              //      beginContract: "2017-01-02",
-              //      endContract: "2024-01-17",
-              //      workAge: null,
-              //      salary: null
-              // },
-              emp:{name: '',
-              gender: '',
-              birthday: '',
-              idCard: '',
-              wedlock: '',
-              nationId: '',
-              nativePlace: '',
-              politicId: '',
-              email: '',
-              phone: '',
-              address: '',
-              departmentId: '',
-              jobLevelId: '',
-              posId: '',
-              engageForm: '',
-              tiptopDegree: '',
-              specialty: '',
-              school: '',
-              beginDate: '',
-              workState: '在职',
-              workID: '',
-              contractTerm: '',
-              conversionTime: '',
-              notWorkDate: null,
-              beginContract: '',
-              endContract: '',
-              workAge: '',
-              salary: null
-            },
+              emp:{name: "姚森",
+                   gender: "男",
+                   birthday: "1991-02-05",
+                   idCard: "610122199102058952",
+                   wedlock: "已婚",
+                   nationId: 1,
+                   nativePlace: "河南",
+                   politicId: 3,
+                   email: "yaosen@qq.com",
+                   phone: "14785559936",
+                   address: "河南洛阳人民大道58号",
+                   departmentId: 92,
+                   jobLevelId: 15,
+                   posId: 34,
+                   engageForm: "劳动合同",
+                   tiptopDegree: "硕士",
+                   specialty: "室内装修设计",
+                   school: "西北大学",
+                   beginDate: "2017-01-02",
+                   workState: "在职",
+                   workID: '',
+                   contractTerm: 7,
+                   conversionTime: "2017-04-02",
+                   notWorkDate: null,
+                   beginContract: "2017-01-02",
+                   endContract: "2024-01-17",
+                   workAge: null,
+                   salary: null
+              },
+            //   emp:{name: '',
+            //   gender: '',
+            //   birthday: '',
+            //   idCard: '',
+            //   wedlock: '',
+            //   nationId: '',
+            //   nativePlace: '',
+            //   politicId: '',
+            //   email: '',
+            //   phone: '',
+            //   address: '',
+            //   departmentId: '',
+            //   jobLevelId: '',
+            //   posId: '',
+            //   engageForm: '',
+            //   tiptopDegree: '',
+            //   specialty: '',
+            //   school: '',
+            //   beginDate: '',
+            //   workState: '在职',
+            //   workID: '',
+            //   contractTerm: '',
+            //   conversionTime: '',
+            //   notWorkDate: null,
+            //   beginContract: '',
+            //   endContract: '',
+            //   workAge: '',
+            //   salary: null
+            // },
               /*添加页面 - 部门树弹框*/
               departmentVisable: false,
               /*高级搜索 - 部门树弹框开关*/
@@ -469,6 +471,23 @@ import {deleteRequest, getRequest, postRequest, putRequest} from "../../utils/ap
           }
       },
       methods: {
+        /*重置高级查询条件*/
+        resetCondition(){
+          this.searchValue = {
+            politicId: null,
+                nationId: null,
+                jobLevelId: null,
+                posId: null,
+                engageForm: null,
+                departmentId: null,
+                beginDateScope: null
+          };
+          this.inputDepName = null;
+        },
+        /*清除高级搜索选中的部门*/
+        clearSelectDept(){
+          this.inputDepName = null;
+        },
         /*高级搜索 - 弹出部门树pop弹框*/
         advshowDepTree(){
           this.advDeptPopVisable = !this.advDeptPopVisable;
@@ -638,13 +657,27 @@ import {deleteRequest, getRequest, postRequest, putRequest} from "../../utils/ap
             let url = '/employee/basic/?page=' + this.page + '&size=' + this.size;
             if (type && type == 'advanced') {
               // 高级搜索
-              url += '&politicId=' + this.searchValue.politicId +
-                     '&nationId=' + this.searchValue.nationId +
-                     '&jobLevelId=' + this.searchValue.jobLevelId +
-                     '&posId=' + this.searchValue.posId +
-                     '&engageForm=' + this.searchValue.engageForm +
-                     '&departmentId=' + this.searchValue.departmentId +
-                     '&beginDateScope=' + this.searchValue.beginDateScope;
+              if (this.searchValue.politicId) {
+                url += '&politicId=' + this.searchValue.politicId;
+              }
+              if (this.searchValue.nationId) {
+                url += '&nationId=' + this.searchValue.nationId;
+              }
+              if (this.searchValue.jobLevelId) {
+                url += '&jobLevelId=' + this.searchValue.jobLevelId;
+              }
+              if (this.searchValue.posId) {
+                url += '&posId=' + this.searchValue.posId;
+              }
+              if (this.searchValue.engageForm) {
+                url += '&engageForm=' + this.searchValue.engageForm;
+              }
+              if (this.searchValue.departmentId) {
+                url += '&departmentId=' + this.searchValue.departmentId;
+              }
+              if (this.searchValue.beginDateScope) {
+                url += '&beginDateScope=' + this.searchValue.beginDateScope;
+              }
             } else {
               // 普通搜索
               url += '&name=' + this.keyword;
@@ -662,6 +695,8 @@ import {deleteRequest, getRequest, postRequest, putRequest} from "../../utils/ap
           showEmpAddDialog() {
               /*添加之前要清空emp对象*/
               this.setEmpEmpty();
+              /*打开弹框就显示工号*/
+              this.generateWorkID();
               this.initPositions();
               this.title = '添加员工';
               this.empDialogVisible = true;
@@ -681,6 +716,7 @@ import {deleteRequest, getRequest, postRequest, putRequest} from "../../utils/ap
               getRequest('/employee/basic/maxWorkID').then(resp => {
                   this.loading = false;
                   if (resp) {
+                      console.log(resp.obj);
                       this.emp.workID = resp.obj;
                   }
               })
@@ -718,7 +754,7 @@ import {deleteRequest, getRequest, postRequest, putRequest} from "../../utils/ap
           /*加载添加员工页面下拉框数据*/
           this.initSelectionData();
           /*打开弹框就显示工号*/
-          this.generateWorkID();
+          // this.generateWorkID();
           /*初始化职位*/
           this.initPositions();
       }
@@ -728,7 +764,7 @@ import {deleteRequest, getRequest, postRequest, putRequest} from "../../utils/ap
 <style>
   /*高级搜索条件框*/
   .advanceCondition {
-      border: 2px solid #4156c2;
+      border: 1px solid #39a0f5;
       border-radius: 5px;
       box-sizing: border-box;
       padding: 5px 10px;

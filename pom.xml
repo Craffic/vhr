@@ -10,14 +10,15 @@
     </parent>
 
     <groupId>com.craffic</groupId>
-    <artifactId>vhr_dev</artifactId>
+    <artifactId>vhr</artifactId>
     <version>0.0.1-SNAPSHOT</version>
     <packaging>pom</packaging>
 
-    <name>vhr_dev</name>
+    <name>vhr</name>
     <description>微人事项目</description>
 
     <modules>
         <module>vhr_server</module>
+        <module>vhr-server</module>
     </modules>
 </project>

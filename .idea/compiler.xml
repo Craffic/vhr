@@ -7,17 +7,25 @@
         <sourceOutputDir name="target/generated-sources/annotations" />
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
-        <module name="vhr_server" />
+        <module name="vhr-service" />
+        <module name="vhr-web" />
+        <module name="vhr-model" />
+        <module name="vhr-commons" />
+        <module name="vhr-mapper" />
       </profile>
     </annotationProcessing>
     <bytecodeTargetLevel>
-      <module name="vhr_dev" target="1.7" />
-      <module name="vhr_dev_permession_1" target="1.8" />
       <module name="vhr_server" target="8" />
     </bytecodeTargetLevel>
   </component>
   <component name="JavacSettings">
     <option name="ADDITIONAL_OPTIONS_OVERRIDE">
+      <module name="vhr-commons" options="-parameters" />
+      <module name="vhr-mapper" options="-parameters" />
+      <module name="vhr-model" options="-parameters" />
+      <module name="vhr-server" options="-parameters" />
+      <module name="vhr-service" options="-parameters" />
+      <module name="vhr-web" options="-parameters" />
       <module name="vhr_server" options="-parameters" />
     </option>
   </component>

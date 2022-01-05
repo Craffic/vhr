@@ -23,4 +23,6 @@ public interface EmployeeMapper {
     int updateByPrimaryKeySelective(Employee record);
 
     Integer addEmps(@Param("list") List<Employee> list);
+
+    Employee queryEmployeeById(@Param("id") Integer id);
 }

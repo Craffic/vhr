@@ -37,6 +37,12 @@
             <scope>compile</scope>
         </dependency>
         <!--Excel poi end-->
+        <!--amqp start-->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-amqp</artifactId>
+        </dependency>
+        <!--amqp end-->
     </dependencies>
 
 </project>

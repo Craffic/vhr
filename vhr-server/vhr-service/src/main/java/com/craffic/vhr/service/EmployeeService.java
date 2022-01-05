@@ -3,6 +3,9 @@ package com.craffic.vhr.service;
 import com.craffic.vhr.mapper.EmployeeMapper;
 import com.craffic.vhr.model.Employee;
 import com.craffic.vhr.model.RespPageBean;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -14,8 +17,11 @@ import java.util.List;
 @Service
 public class EmployeeService {
 
+    public static final Logger logger = LoggerFactory.getLogger(EmployeeService.class);
     @Autowired
     private EmployeeMapper employeeMapper;
+    @Autowired
+    private RabbitTemplate rabbitTemplate;
 
     // 计算合同期限
     SimpleDateFormat yearFormat = new SimpleDateFormat("yyyy");
@@ -46,7 +52,13 @@ public class EmployeeService {
         double month = (diffYear) * 12 + (diffMouth);
         employee.setContractTerm(Double.parseDouble(decimalFormat.format(month / 12)));
 
-        return employeeMapper.insertSelective(employee);
+        int result = employeeMapper.insertSelective(employee);
+        if (result == 1){
+            Employee newEmp = employeeMapper.queryEmployeeById(employee.getId());
+            logger.info("new emp: " + newEmp.toString());
+            rabbitTemplate.convertAndSend("Craffic.mail.welcome", newEmp);
+        }
+        return result;
     }
 
     public Integer maxWorkID() {

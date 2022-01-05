@@ -120,7 +120,7 @@ public class EmpBasicController {
     }
 
     /**
-     * 到处员工信息到excel表
+     * 导出员工信息到excel表
      */
     @GetMapping("/export/emp_info")
     public ResponseEntity<byte[]> exportEmpsData(){

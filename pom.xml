@@ -18,7 +18,7 @@
     <description>微人事项目</description>
 
     <modules>
-        <module>vhr_server</module>
         <module>vhr-server</module>
+        <module>mail-server</module>
     </modules>
 </project>

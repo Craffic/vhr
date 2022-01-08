@@ -4,6 +4,7 @@ import com.craffic.vhr.mapper.SalaryMapper;
 import com.craffic.vhr.model.Salary;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.GetMapping;
 
 import java.util.Date;
 import java.util.List;
@@ -13,6 +14,8 @@ public class SalaryService {
 
     @Autowired
     private SalaryMapper salaryMapper;
+    @Autowired
+    SalaryService salaryService;
 
     public List<Salary> getAllSalaries() {
         return salaryMapper.getAllSalaries();

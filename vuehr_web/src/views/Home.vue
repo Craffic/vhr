@@ -4,17 +4,21 @@
   <el-container>
     <el-header class="header">
       <div class="title">微人事管理系统</div>
-      <!--用户信息下拉框-->
-      <el-dropdown class="userInfo" @command="commandHandler">
+      <div>
+        <!--chat bell-->
+        <el-button icon="el-icon-bell" type="text" style="margin-right: 8px;color: #1d2936" @click="goChat"></el-button>
+        <!--用户信息下拉框-->
+        <el-dropdown class="userInfo" @command="commandHandler">
         <span class="el-dropdown-link">
           {{user.name}}<i><img :src="user.userface" alt=""></i>
         </span>
-        <el-dropdown-menu slot="dropdown">
-          <el-dropdown-item command="profile">个人中心</el-dropdown-item>
-          <el-dropdown-item command="setting">设置</el-dropdown-item>
-          <el-dropdown-item command="logout" divided>注销</el-dropdown-item>
-        </el-dropdown-menu>
-      </el-dropdown>
+          <el-dropdown-menu slot="dropdown">
+            <el-dropdown-item command="profile">个人中心</el-dropdown-item>
+            <el-dropdown-item command="setting">设置</el-dropdown-item>
+            <el-dropdown-item command="logout" divided>注销</el-dropdown-item>
+          </el-dropdown-menu>
+        </el-dropdown>
+      </div>
     </el-header>
     <el-container>
       <el-aside width="200px">
@@ -54,6 +58,10 @@ export default {
     }
   },
   methods: {
+    /*跳转在线聊天页面*/
+    goChat() {
+      this.$router.push('/chat');
+    },
     commandHandler(cmd) {
       if (cmd == 'logout') {
         this.$confirm('此操作将注销登录, 是否继续?', '提示', {
